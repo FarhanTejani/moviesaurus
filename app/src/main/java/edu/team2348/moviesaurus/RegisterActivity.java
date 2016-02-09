@@ -38,7 +38,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ParseUser user = new ParseUser();
-                user.setEmail(email.getText().toString());
+                user.setEmail("user@me.com");
                 user.setUsername(email.getText().toString());
                 user.setPassword(password.getText().toString());
                 user.signUpInBackground(new SignUpCallback() {
