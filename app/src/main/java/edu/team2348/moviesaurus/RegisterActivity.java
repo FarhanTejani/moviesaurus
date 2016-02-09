@@ -1,15 +1,15 @@
 package edu.team2348.moviesaurus;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -39,6 +39,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 ParseUser user = new ParseUser();
                 user.setEmail(email.getText().toString());
+                user.setUsername(email.getText().toString());
                 user.setPassword(password.getText().toString());
                 user.signUpInBackground(new SignUpCallback() {
                     @Override
@@ -47,6 +48,11 @@ public class RegisterActivity extends AppCompatActivity {
                             startActivity(intent);
                         } else {
                             Log.e("ParseError", e.getMessage());
+                            Context context = getApplicationContext();
+                            CharSequence text = e.getMessage();
+                            int duration = Toast.LENGTH_SHORT;
+                            Toast toast = Toast.makeText(context, text, duration);
+                            toast.show();
                         }
                     }
                 });

@@ -33,7 +33,7 @@
             android:inputType="textEmailAddress"
             android:id="@+id/email_edit_text"
             android:textColorHint="#000000"
-            android:backgroundTint="#000000"/>
+            />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
