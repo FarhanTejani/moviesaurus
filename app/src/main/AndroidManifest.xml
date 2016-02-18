@@ -40,6 +40,10 @@
         <activity
             android:name=".RegisterActivity"
             android:label="@string/title_activity_register"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MovieSearchActivity"
+            android:label="@string/title_activity_movie_search"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

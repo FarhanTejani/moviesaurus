@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.LogOutCallback;
@@ -17,7 +19,11 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 
 public class MainActivity extends AppCompatActivity {
+
     Intent intent;
+    TextView userWelcome;
+    Button searchMoviesButton;
+    Intent intentSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +60,17 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(intent);
                             }
                         }).show();
+            }
+        });
+
+        userWelcome = (TextView) findViewById(R.id.logged_in_user);
+        userWelcome.setText("Welcome " + ParseUser.getCurrentUser().getUsername());
+        intentSearch = new Intent(this, MovieSearchActivity.class);
+        searchMoviesButton = (Button) findViewById(R.id.search_movies_button);
+        searchMoviesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(intentSearch);
             }
         });
 
