@@ -61,7 +61,7 @@ public class MovieSearchActivity extends AppCompatActivity {
         searchByNameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("Param", searchQuery.getText().toString().replace(" ", "+"));
+//                Log.d("Param", searchQuery.getText().toString().replace(" ", "+"));
                 client.get(url + searchQuery.getText().toString().replace(" ", "+"), new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {

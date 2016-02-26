@@ -24,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     TextView userWelcome;
     Button searchMoviesButton;
     Intent intentSearch;
+    Intent newReleasesIntent;
+    Intent newDVDReleasesIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,5 +76,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        newReleasesIntent = new Intent(this, NewReleasesActivity.class);
+        findViewById(R.id.new_releases_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(newReleasesIntent);
+            }
+        });
+
+        newDVDReleasesIntent = new Intent(this, NewDVDReleasesActivity.class);
+        findViewById(R.id.new_dvd_releases_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(newDVDReleasesIntent);
+            }
+        });
     }
 }

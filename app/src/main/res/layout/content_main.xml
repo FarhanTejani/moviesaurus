@@ -26,4 +26,16 @@
         android:id="@+id/search_movies_button"
         android:text="Search For Movie"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/new_releases_button"
+        android:text="New Releases"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/new_dvd_releases_button"
+        android:text="New DVD Releases"/>
+
 </LinearLayout>

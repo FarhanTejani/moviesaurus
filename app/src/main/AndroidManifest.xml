@@ -25,7 +25,7 @@
 
         <activity
             android:name=".SigninActivity"
-            android:label="@string/title_activity_signin"
+            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -44,6 +44,14 @@
         <activity
             android:name=".MovieSearchActivity"
             android:label="@string/title_activity_movie_search"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".NewReleasesActivity"
+            android:label="@string/title_activity_new_releases"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".NewDVDReleasesActivity"
+            android:label="@string/title_activity_new_dvdreleases"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
