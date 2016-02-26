@@ -21,6 +21,11 @@ import java.util.LinkedList;
 
 import cz.msebera.android.httpclient.Header;
 
+/**
+ * Activity that shows users new releases in  a ListView
+ * @author Faizan Virani
+ * @version 1.0
+ */
 public class NewReleasesActivity extends AppCompatActivity {
 
     AsyncHttpClient client;
@@ -57,9 +62,12 @@ public class NewReleasesActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Updates the ListView with the data received from the REST call
+     */
     private void updateListView() {
         listView = (ListView) findViewById(R.id.new_releases_results_list_view);
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, movieList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, movieList);
         listView.setAdapter(adapter);
     }
 

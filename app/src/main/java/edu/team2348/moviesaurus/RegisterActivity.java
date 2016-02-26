@@ -15,6 +15,12 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
+/**
+ * Activity that allows a user to register an account on Moviesaurus
+ * @author Faizan Virani
+ * @author Thomas Lilly
+ * @version 1.0
+ */
 public class RegisterActivity extends AppCompatActivity {
 
     EditText email;

@@ -29,6 +29,11 @@ import java.util.LinkedList;
 
 import cz.msebera.android.httpclient.Header;
 
+/**
+ * Activity that allows the user to search for a movie they desire
+ * @author Faizan Virani
+ * @version 1.0
+ */
 public class MovieSearchActivity extends AppCompatActivity {
 
     Button searchByNameButton;
@@ -86,7 +91,7 @@ public class MovieSearchActivity extends AppCompatActivity {
 
     private void updateListView() {
         listView = (ListView) findViewById(R.id.results_list_view);
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, movieList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, movieList);
         listView.setAdapter(adapter);
     }
 

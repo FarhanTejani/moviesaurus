@@ -15,6 +15,11 @@ import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
+/**
+ * Activity that allows a user to sign into the app
+ * @author Fazian Virani
+ * @version 1.0
+ */
 public class SigninActivity extends AppCompatActivity {
 
     Button signUpBtn;

@@ -18,6 +18,12 @@ import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
+/**
+ * Home/Main Activity of the application. It allows you to select form the available functionality
+ * of the application
+ * @author Faizan Virani
+ * @version 1.0
+ */
 public class MainActivity extends AppCompatActivity {
 
     Intent intent;
@@ -39,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                //Create a snackbar for logging out
                 Snackbar.make(view, "Are you sure you want to logout?", Snackbar.LENGTH_LONG)
                         .setAction("YES", new View.OnClickListener() {
                             @Override
@@ -50,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
                                         if (e == null) {
                                             startActivity(intent);
                                         } else {
+                                            //displays Parse Error in a toast
                                             Log.e("ParseError", e.getMessage());
                                             Context context = getApplicationContext();
                                             CharSequence text = e.getMessage();

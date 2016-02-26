@@ -14,6 +14,12 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+/**
+ * Class that allows user to view their current profile information and update their information
+ * @author Faizan Virani
+ * @version 1.0
+ */
+
 public class UserProfileActivity extends AppCompatActivity {
 
     ParseUser user = ParseUser.getCurrentUser();
@@ -64,6 +70,7 @@ public class UserProfileActivity extends AppCompatActivity {
         });
 
     }
+
 
     private void saveSuccess() {
         Snackbar.make(findViewById(R.id.user_profile_activity_layout), "Changed Successfully", Snackbar.LENGTH_LONG).show();

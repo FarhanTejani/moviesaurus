@@ -20,6 +20,12 @@ import java.util.LinkedList;
 
 import cz.msebera.android.httpclient.Header;
 
+/**
+ * Activity that allows user to see a list of new DVD releases
+ * @author Faizan Virani
+ * @version 1.0
+ */
+
 public class NewDVDReleasesActivity extends AppCompatActivity {
 
     AsyncHttpClient client;
@@ -58,7 +64,7 @@ public class NewDVDReleasesActivity extends AppCompatActivity {
 
     private void updateListView() {
         listView = (ListView) findViewById(R.id.new_dvd_releases_results_list_view);
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, movieList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, movieList);
         listView.setAdapter(adapter);
     }
 

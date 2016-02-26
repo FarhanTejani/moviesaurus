@@ -5,7 +5,10 @@ import android.app.Application;
 import com.parse.Parse;
 
 /**
- * Created by faizanv on 2/8/16.
+ * Class the represent the lifetime of the application.  Allows to be persistent throughout the
+ * lifetime of the application.
+ * @author Faizan Virani
+ * @version 1.0
  */
 public class MainApplication extends Application {
 
