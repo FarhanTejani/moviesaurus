@@ -31,6 +31,7 @@ public class UserProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 user.setEmail(((EditText) findViewById(R.id.new_email_edit_text)).getText().toString());
+                ((EditText) findViewById(R.id.new_email_edit_text)).setText("");
                 user.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
@@ -48,6 +49,7 @@ public class UserProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 user.setPassword(((EditText)findViewById(R.id.new_password_edit_text)).getText().toString());
+                ((EditText) findViewById(R.id.new_password_edit_text)).setText("");
                 user.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
