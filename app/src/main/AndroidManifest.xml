@@ -52,6 +52,10 @@
         <activity
             android:name=".NewDVDReleasesActivity"
             android:label="@string/title_activity_new_dvdreleases"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".UserProfileActivity"
+            android:label="@string/title_activity_user_profile"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     Intent intentSearch;
     Intent newReleasesIntent;
     Intent newDVDReleasesIntent;
+    Intent viewUserProfileIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +90,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(newDVDReleasesIntent);
+            }
+        });
+
+        viewUserProfileIntent = new Intent(this, UserProfileActivity.class);
+        findViewById(R.id.view_user_profile_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(viewUserProfileIntent);
             }
         });
     }
