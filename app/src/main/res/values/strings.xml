@@ -15,7 +15,7 @@
         completions."
     </string>
     <string name="title_activity_signin">SigninActivity</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Moviesaurus</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_movie_search">MovieSearchActivity</string>
     <string name="title_activity_new_releases">NewReleasesActivity</string>

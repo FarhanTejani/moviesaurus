@@ -95,13 +95,6 @@ public class MovieSearchActivity extends AppCompatActivity {
 
     }
     @Override
-    public boolean onSearchRequested() {
-
-        Log.d("search", "search triggered");
-
-        return false;  // don't go ahead and show the search box
-    }
-    @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         handleIntent(intent);
@@ -134,6 +127,7 @@ public class MovieSearchActivity extends AppCompatActivity {
 
         }
     }
+
 
     private void updateListView() {
         listView = (ListView) findViewById(R.id.results_list_view);
