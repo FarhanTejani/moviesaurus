@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/search"
+        android:title="Search"
+        android:icon="@drawable/ic_search_24dp"
+        app:showAsAction="collapseActionView|ifRoom"
+        app:actionViewClass="android.widget.SearchView" />
+    <item
+        android:id="@+id/my_profile"
+        android:title="Profile"
+        app:showAsAction="never"
+        />
+    <item
+        android:title="Logout"
+        android:id="@+id/logout"
+        app:showAsAction="never" />
+</menu>
