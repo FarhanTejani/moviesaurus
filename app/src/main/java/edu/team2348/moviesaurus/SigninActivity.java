@@ -42,10 +42,16 @@ public class SigninActivity extends AppCompatActivity {
         pass = (EditText) findViewById(R.id.password_edit_text);
         loggedInIntent = new Intent(this, MainActivity.class);
         signUpIntent = new Intent(this, RegisterActivity.class);
+        ParseUser userPersist = ParseUser.getCurrentUser();
+        if (userPersist != null) {
+            startActivity(loggedInIntent);
+            finish();
+        }
 
         signInBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("SignIn", "No persistent user");
                 ParseUser.logInInBackground(
                         email.getText().toString(),
                         pass.getText().toString(),
@@ -54,12 +60,14 @@ public class SigninActivity extends AppCompatActivity {
                             public void done(ParseUser user, ParseException e) {
                                 if (user != null) {
                                     startActivity(loggedInIntent);
+                                    finish();
                                 } else {
                                     Log.e("ParseError", e.getMessage());
                                 }
                             }
                         }
                 );
+
             }
         });
 
@@ -67,6 +75,7 @@ public class SigninActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(signUpIntent);
+                finish();
             }
         });
 
