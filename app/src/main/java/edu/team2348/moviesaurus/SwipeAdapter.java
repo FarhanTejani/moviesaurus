@@ -22,14 +22,14 @@ public class SwipeAdapter extends FragmentStatePagerAdapter{
         String url;
         switch (position) {
             case 0:
-                url = "http://api.rottentomatoes.com/api/public/v1.0/lists/dvds/new_releases.json?apikey=yedukp76ffytfuy24zsqk7f5";
-                return MovieFragment.newInstance(0, url);
-            case 1:
                 url = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json?apikey=yedukp76ffytfuy24zsqk7f5";
+                return MovieFragment.newInstance(1, url);
+            case 1:
+                url = "http://api.rottentomatoes.com/api/public/v1.0/lists/dvds/new_releases.json?apikey=yedukp76ffytfuy24zsqk7f5";
                 return MovieFragment.newInstance(1, url);
             case 2:
                 url = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?apikey=yedukp76ffytfuy24zsqk7f5";
-                return MovieFragment.newInstance(2, url);
+                return MovieFragment.newInstance(1, url);
             default:
                 return null;
         }

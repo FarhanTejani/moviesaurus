@@ -44,6 +44,7 @@ public class MovieFragment extends Fragment {
     private OnListFragmentInteractionListener mListener;
     private String url;
     private List<String> movieList;
+    private List<String> urlList;
     private MyMovieRecyclerViewAdapter mAdapter;
 
     /**
@@ -81,6 +82,7 @@ public class MovieFragment extends Fragment {
 
         AsyncHttpClient client = new AsyncHttpClient();
         movieList = new ArrayList<>();
+        urlList = new ArrayList<>();
         client.get(url, new JsonHttpResponseHandler() {
 
             @Override
@@ -90,9 +92,12 @@ public class MovieFragment extends Fragment {
                 try {
                     movies = response.getJSONArray("movies");
                     movieList.clear();
+                    urlList.clear();
                     for (int i = 0; i < movies.length(); i++) {
                         JSONObject cur = movies.getJSONObject(i);
                         movieList.add(cur.getString("title"));
+                        urlList.add(cur.getJSONObject("posters").getString("original"));
+                        Log.d("MovieFrag", cur.getString("title"));
                     }
                     mAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
@@ -100,7 +105,7 @@ public class MovieFragment extends Fragment {
                 }
             }
         });
-        Log.d("MovieFrag First", "attempted to get stuff");
+
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
@@ -109,7 +114,7 @@ public class MovieFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            mAdapter = new MyMovieRecyclerViewAdapter(movieList, mListener);
+            mAdapter = new MyMovieRecyclerViewAdapter(movieList, urlList, mListener);
             recyclerView.setAdapter(mAdapter);
         }
 

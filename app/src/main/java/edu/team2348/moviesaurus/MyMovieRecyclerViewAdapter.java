@@ -7,7 +7,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import edu.team2348.moviesaurus.MovieFragment.OnListFragmentInteractionListener;
 import edu.team2348.moviesaurus.dummy.DummyContent;
@@ -29,11 +32,13 @@ import java.util.List;
 public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecyclerViewAdapter.ViewHolder> {
 
     private final List<String> mValues;
+    private final List<String> mPics;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyMovieRecyclerViewAdapter(List<String> items, OnListFragmentInteractionListener listener) {
+    public MyMovieRecyclerViewAdapter(List<String> items, List<String> pics, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
+        mPics = pics;
     }
 
 
@@ -50,6 +55,7 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecy
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mContentView.setText(mValues.get(position));
 
+        Picasso.with(holder.poster.getContext()).load(mPics.get(position)).resize(240, 350).into(holder.poster);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,15 +75,15 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecy
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
         public final TextView mContentView;
+        public final ImageView poster;
         public DummyItem mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
             mContentView = (TextView) view.findViewById(R.id.content);
+            poster = (ImageView) view.findViewById(R.id.movie_poster);
         }
 
 
