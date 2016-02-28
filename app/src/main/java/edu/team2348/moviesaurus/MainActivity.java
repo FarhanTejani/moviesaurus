@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -38,6 +39,7 @@ import edu.team2348.moviesaurus.dummy.DummyContent;
  * Home/Main Activity of the application. It allows you to select form the available functionality
  * of the application
  * @author Faizan Virani
+ * @author Thomas Lilly
  * @version 1.0
  */
 public class MainActivity extends AppCompatActivity implements MovieFragment.OnListFragmentInteractionListener {
@@ -52,18 +54,19 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
     TabLayout tabLayout;
     PagerAdapter adapter;
     ViewPager viewPager;
+    CharSequence[] titles = {"New Releases", "New DVDs", "Top Box Office"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.showOverflowMenu();
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("New Release"));
-        tabLayout.addTab(tabLayout.newTab().setText("New DVDs"));
-        tabLayout.addTab(tabLayout.newTab().setText("Box Office"));
+        tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(this, R.drawable.ic_whatshot_24dp)));
+        tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(this, R.drawable.ic_disc_full_24dp)));
+        tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(this, R.drawable.ic_trending_up_24dp)));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         viewPager = (ViewPager) findViewById(R.id.pager);
         adapter = new SwipeAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
@@ -73,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-                adapter.notifyDataSetChanged();
+                toolbar.setTitle(titles[tab.getPosition()]);
             }
 
             @Override
@@ -83,10 +86,10 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                adapter.notifyDataSetChanged();
+
             }
         });
-
+        toolbar.setTitle(titles[0]);
         signInIntent = new Intent(this, SigninActivity.class);
 
 
