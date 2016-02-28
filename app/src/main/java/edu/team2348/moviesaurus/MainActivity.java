@@ -76,7 +76,10 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-                toolbar.setTitle(titles[tab.getPosition()]);
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().setTitle(titles[tab.getPosition()]);
+                }
+
             }
 
             @Override
@@ -89,7 +92,9 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
 
             }
         });
-        toolbar.setTitle(titles[0]);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(titles[0]);
+        }
         signInIntent = new Intent(this, SigninActivity.class);
 
 
