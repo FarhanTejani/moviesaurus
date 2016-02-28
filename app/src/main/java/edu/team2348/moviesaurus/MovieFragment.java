@@ -97,7 +97,6 @@ public class MovieFragment extends Fragment {
                         JSONObject cur = movies.getJSONObject(i);
                         movieList.add(cur.getString("title"));
                         urlList.add(cur.getJSONObject("posters").getString("original"));
-                        Log.d("MovieFrag", cur.getString("title"));
                     }
                     mAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {

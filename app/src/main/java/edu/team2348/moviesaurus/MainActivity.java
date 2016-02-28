@@ -87,46 +87,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
             }
         });
 
-
-
         signInIntent = new Intent(this, SigninActivity.class);
-
-
-//        userWelcome = (TextView) findViewById(R.id.logged_in_user);
-//        userWelcome.setText("Welcome " + ParseUser.getCurrentUser().getUsername());
-//        intentSearch = new Intent(this, MovieSearchActivity.class);
-//        searchMoviesButton = (Button) findViewById(R.id.search_movies_button);
-//        searchMoviesButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startActivity(intentSearch);
-//            }
-//        });
-//
-//        newReleasesIntent = new Intent(this, NewReleasesActivity.class);
-//        findViewById(R.id.new_releases_button).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startActivity(newReleasesIntent);
-//            }
-//        });
-//
-//        newDVDReleasesIntent = new Intent(this, NewDVDReleasesActivity.class);
-//        findViewById(R.id.new_dvd_releases_button).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startActivity(newDVDReleasesIntent);
-//            }
-//        });
-//
-//        viewUserProfileIntent = new Intent(this, UserProfileActivity.class);
-//        findViewById(R.id.view_user_profile_button).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startActivity(viewUserProfileIntent);
-//            }
-//        });
-
 
 
     }
