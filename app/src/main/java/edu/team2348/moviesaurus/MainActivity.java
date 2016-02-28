@@ -1,5 +1,6 @@
 package edu.team2348.moviesaurus;
 
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -7,7 +8,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -28,13 +32,15 @@ import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
+import edu.team2348.moviesaurus.dummy.DummyContent;
+
 /**
  * Home/Main Activity of the application. It allows you to select form the available functionality
  * of the application
  * @author Faizan Virani
  * @version 1.0
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MovieFragment.OnListFragmentInteractionListener {
 
     TextView userWelcome;
     Button searchMoviesButton;
@@ -43,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
     Intent newDVDReleasesIntent;
     Intent viewUserProfileIntent;
     Intent signInIntent;
+    TabLayout tabLayout;
+    PagerAdapter adapter;
+    ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,45 +60,72 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.showOverflowMenu();
+        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.addTab(tabLayout.newTab().setText("New Release"));
+        tabLayout.addTab(tabLayout.newTab().setText("New DVDs"));
+        tabLayout.addTab(tabLayout.newTab().setText("Box Office"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        adapter = new SwipeAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                adapter.notifyDataSetChanged();
+            }
+        });
+
 
 
         signInIntent = new Intent(this, SigninActivity.class);
 
 
-        userWelcome = (TextView) findViewById(R.id.logged_in_user);
-        userWelcome.setText("Welcome " + ParseUser.getCurrentUser().getUsername());
-        intentSearch = new Intent(this, MovieSearchActivity.class);
-        searchMoviesButton = (Button) findViewById(R.id.search_movies_button);
-        searchMoviesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(intentSearch);
-            }
-        });
-
-        newReleasesIntent = new Intent(this, NewReleasesActivity.class);
-        findViewById(R.id.new_releases_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(newReleasesIntent);
-            }
-        });
-
-        newDVDReleasesIntent = new Intent(this, NewDVDReleasesActivity.class);
-        findViewById(R.id.new_dvd_releases_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(newDVDReleasesIntent);
-            }
-        });
-
-        viewUserProfileIntent = new Intent(this, UserProfileActivity.class);
-        findViewById(R.id.view_user_profile_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(viewUserProfileIntent);
-            }
-        });
+//        userWelcome = (TextView) findViewById(R.id.logged_in_user);
+//        userWelcome.setText("Welcome " + ParseUser.getCurrentUser().getUsername());
+//        intentSearch = new Intent(this, MovieSearchActivity.class);
+//        searchMoviesButton = (Button) findViewById(R.id.search_movies_button);
+//        searchMoviesButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(intentSearch);
+//            }
+//        });
+//
+//        newReleasesIntent = new Intent(this, NewReleasesActivity.class);
+//        findViewById(R.id.new_releases_button).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(newReleasesIntent);
+//            }
+//        });
+//
+//        newDVDReleasesIntent = new Intent(this, NewDVDReleasesActivity.class);
+//        findViewById(R.id.new_dvd_releases_button).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(newDVDReleasesIntent);
+//            }
+//        });
+//
+//        viewUserProfileIntent = new Intent(this, UserProfileActivity.class);
+//        findViewById(R.id.view_user_profile_button).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(viewUserProfileIntent);
+//            }
+//        });
 
 
 
@@ -165,6 +201,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
 
-
+    }
 }
