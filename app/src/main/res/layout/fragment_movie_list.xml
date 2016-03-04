@@ -8,6 +8,8 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
+    android:clickable="true"
+    android:background="?android:attr/selectableItemBackground"
     app:layoutManager="LinearLayoutManager"
     tools:context="edu.team2348.moviesaurus.MovieFragment"
     tools:listitem="@layout/fragment_movie" />

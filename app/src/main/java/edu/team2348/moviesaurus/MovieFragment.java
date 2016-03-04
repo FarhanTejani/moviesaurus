@@ -115,6 +115,7 @@ public class MovieFragment extends Fragment {
             }
             mAdapter = new MyMovieRecyclerViewAdapter(movieList, urlList, mListener);
             recyclerView.setAdapter(mAdapter);
+            recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST));
         }
 
         return view;
@@ -149,6 +150,6 @@ public class MovieFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(MyMovieRecyclerViewAdapter.ViewHolder item);
     }
 }

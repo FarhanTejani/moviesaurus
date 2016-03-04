@@ -1,19 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="fill_parent"
     android:layout_height="100dp"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:paddingRight="10dp"
+    android:background="?android:attr/selectableItemBackground">
 
     <android.support.v7.widget.AppCompatImageView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:id="@+id/movie_poster"
-        android:paddingLeft="10dp" />
-    <TextView
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"/>
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/content"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:paddingTop="15dp"
+
+        android:textAppearance="?attr/textAppearanceListItem" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        />
+    <android.support.v7.widget.AppCompatRatingBar
+        android:id="@+id/rating"
+        style="?android:attr/ratingBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem" />
+        android:progressTint="@color/ratingColor"
+        android:numStars="5"
+        android:max="5"
+        android:isIndicator="true"
+        android:layout_gravity="right|center_vertical"/>
 
 </LinearLayout>

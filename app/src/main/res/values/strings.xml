@@ -22,4 +22,5 @@
     <string name="title_activity_new_dvdreleases">NewDVDReleasesActivity</string>
     <string name="title_activity_user_profile">UserProfileActivity</string>
     <string name="movie_search">Movie Search</string>
+    <string name="title_activity_movie_detail">MovieDetailActivity</string>
 </resources>

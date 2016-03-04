@@ -6,5 +6,14 @@ package edu.team2348.moviesaurus;
  * @version 1.0
  */
 public class Movie {
-    private final String movie = "Movie";
+    private final String name;
+    private final String rating;
+    private final String description;
+
+    public Movie(String name, String rating, String description) {
+        this.name = name;
+        this.rating = rating;
+        this.description = description;
+    }
+
 }

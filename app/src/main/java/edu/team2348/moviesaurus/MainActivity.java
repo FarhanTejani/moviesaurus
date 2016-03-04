@@ -171,7 +171,13 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
 
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+    public void onListFragmentInteraction(MyMovieRecyclerViewAdapter.ViewHolder item) {
+
+        Log.d("MainActivty", "clicked item" + item.getLayoutPosition());
+        Intent movieDetail = new Intent(this, MovieDetailActivity.class);
+        movieDetail.putExtra("title", item.mContentView.getText());
+        movieDetail.putExtra("poster", item.getPicUrl(item.getLayoutPosition()));
+        startActivity(movieDetail);
 
     }
 }
