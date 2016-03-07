@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
             getSupportActionBar().setTitle(titles[0]);
         }
         signInIntent = new Intent(this, SigninActivity.class);
+        viewUserProfileIntent = new Intent(this, UserProfileActivity.class);
 
 
     }
