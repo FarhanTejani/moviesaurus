@@ -4,15 +4,18 @@ import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -32,6 +35,9 @@ import com.parse.LogOutCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseUser;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import edu.team2348.moviesaurus.dummy.DummyContent;
 
@@ -54,7 +60,8 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
     TabLayout tabLayout;
     PagerAdapter adapter;
     ViewPager viewPager;
-    CharSequence[] titles = {"New Releases", "New DVDs", "Top Box Office"};
+    MenuItem filter;
+    CharSequence[] titles = {"New Releases", "Recommendations", "Top Box Office"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +72,8 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
         toolbar.showOverflowMenu();
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(this, R.drawable.ic_whatshot_24dp)));
-        tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(this, R.drawable.ic_disc_full_24dp)));
         tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(this, R.drawable.ic_trending_up_24dp)));
+        tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(this, R.drawable.ic_disc_full_24dp)));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         viewPager = (ViewPager) findViewById(R.id.pager);
         adapter = new SwipeAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
@@ -79,12 +86,20 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
                 if (getSupportActionBar() != null) {
                     getSupportActionBar().setTitle(titles[tab.getPosition()]);
                 }
+                if (tab.getPosition() == 1 && filter != null) {
+                    filter.setEnabled(true);
+                    filter.getIcon().setAlpha(255);
+                }
+
 
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
+                if (tab.getPosition() == 1 && filter != null) {
+                    filter.setEnabled(false);
+                    filter.getIcon().setAlpha(130);
+                }
             }
 
             @Override
@@ -102,10 +117,18 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();  // Always call the superclass method first
+
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_options, menu);
-
+        filter = menu.getItem(1);
+        filter.setEnabled(false);
+        filter.getIcon().setAlpha(130);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, MovieSearchActivity.class)));
@@ -165,11 +188,64 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
                 startActivity(signInIntent);
                 finish();
                 return true;
+            case R.id.filter:
+                final ArrayList<Integer> mSelectedItems = new ArrayList<>();  // Where we track the selected items
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                // Set the dialog title
+                String[] preList = getResources().getStringArray(R.array.major_list);
+                Arrays.sort(preList);
+                final String[] list = preList;
+                builder.setTitle("Filter")
+                        // Specify the list array, the items to be selected by default (null for none),
+                        // and the listener through which to receive callbacks when items are selected
+                        .setMultiChoiceItems(list, null,
+                                new DialogInterface.OnMultiChoiceClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which,
+                                                        boolean isChecked) {
+                                        if (isChecked) {
+                                            // If the user checked the item, add it to the selected items
+                                            mSelectedItems.add(which);
+                                        } else if (mSelectedItems.contains(which)) {
+                                            // Else, if the item is already in the array, remove it
+                                            mSelectedItems.remove(Integer.valueOf(which));
+                                        }
+                                    }
+                                })
+                                // Set the action buttons
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                // User clicked OK, so save the mSelectedItems results somewhere
+                                // or return them to the component that opened the dialog
+                                ArrayList<String> selectedMajors = new ArrayList<>();
+                                for (Integer i : mSelectedItems) {
+                                    selectedMajors.add(list[i]);
+                                }
+                                SwipeAdapter a = (SwipeAdapter) viewPager.getAdapter();
+                                MovieFragment mf = (MovieFragment) a.getRegisteredFragment(viewPager.getCurrentItem());
+                                mf.filterOut(selectedMajors);
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                builder.create();
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+
+//                adapter.notifyDataSetChanged();
+
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
     @Override
     public void onListFragmentInteraction(MyMovieRecyclerViewAdapter.ViewHolder item) {
@@ -178,6 +254,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
         Intent movieDetail = new Intent(this, MovieDetailActivity.class);
         movieDetail.putExtra("title", item.mContentView.getText());
         movieDetail.putExtra("poster", item.getPicUrl(item.getLayoutPosition()));
+        movieDetail.putExtra("rating", item.rating.getRating());
         startActivity(movieDetail);
 
     }

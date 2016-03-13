@@ -50,8 +50,7 @@ public class MovieSearchActivity extends AppCompatActivity implements MovieFragm
     EditText searchQuery;
     AsyncHttpClient client;
     ListView listView;
-    List<String> movieList;
-    List<String> urlList;
+    List<Movie> movieList;
     String url = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?apikey=yedukp76ffytfuy24zsqk7f5&q=";
     MyMovieRecyclerViewAdapter mAdapter;
     @Override
@@ -76,7 +75,6 @@ public class MovieSearchActivity extends AppCompatActivity implements MovieFragm
 //            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mFrag).commit();
             AsyncHttpClient client = new AsyncHttpClient();
             movieList = new ArrayList<>();
-            urlList = new ArrayList<>();
             RecyclerView view = (RecyclerView) findViewById(R.id.fragment_container);
             client.get(url + query.replace(" ", "+"), new JsonHttpResponseHandler() {
 
@@ -87,11 +85,10 @@ public class MovieSearchActivity extends AppCompatActivity implements MovieFragm
                     try {
                         movies = response.getJSONArray("movies");
                         movieList.clear();
-                        urlList.clear();
                         for (int i = 0; i < movies.length(); i++) {
                             JSONObject cur = movies.getJSONObject(i);
-                            movieList.add(cur.getString("title"));
-                            urlList.add(cur.getJSONObject("posters").getString("original"));
+                            movieList.add(new Movie(cur.getString("title"), cur.getString("synopsis"),
+                                    cur.getJSONObject("posters").getString("original")));
                         }
                         mAdapter.notifyDataSetChanged();
                     } catch (JSONException e) {
@@ -103,7 +100,7 @@ public class MovieSearchActivity extends AppCompatActivity implements MovieFragm
             if (view != null) {
                 Context context = view.getContext();
                 view.setLayoutManager(new LinearLayoutManager(context));
-                mAdapter = new MyMovieRecyclerViewAdapter(movieList, urlList, this);
+                mAdapter = new MyMovieRecyclerViewAdapter(movieList, this);
                 view.setAdapter(mAdapter);
                 view.addItemDecoration(new DividerItemDecoration(view.getContext(), DividerItemDecoration.VERTICAL_LIST));
             }
@@ -146,11 +143,6 @@ public class MovieSearchActivity extends AppCompatActivity implements MovieFragm
     }
 
 
-    private void updateListView() {
-        listView = (ListView) findViewById(R.id.results_list_view);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, movieList);
-        listView.setAdapter(adapter);
-    }
     @Override
     public void onListFragmentInteraction(MyMovieRecyclerViewAdapter.ViewHolder item) {
 

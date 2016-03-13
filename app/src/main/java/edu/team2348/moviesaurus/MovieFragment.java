@@ -2,8 +2,10 @@ package edu.team2348.moviesaurus;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.database.sqlite.SQLiteCantOpenDatabaseException;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,10 +13,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+import com.parse.SaveCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,6 +32,8 @@ import edu.team2348.moviesaurus.dummy.DummyContent;
 import edu.team2348.moviesaurus.dummy.DummyContent.DummyItem;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -34,18 +43,21 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class MovieFragment extends Fragment {
+public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     private static final String URL_ARG = "url";
+    private static final String SORT = "sort";
+    private static final String TAG = "MovieFragment";
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
     private String url;
-    private List<String> movieList;
-    private List<String> urlList;
+    private List<Movie> mList;
     private MyMovieRecyclerViewAdapter mAdapter;
+    private Comparator<Movie> movieComparator;
+    private SwipeRefreshLayout swipeLayout;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -56,11 +68,12 @@ public class MovieFragment extends Fragment {
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static MovieFragment newInstance(int columnCount, String url) {
+    public static MovieFragment newInstance(String url, String sort) {
         MovieFragment fragment = new MovieFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
+//        args.putInt(ARG_COLUMN_COUNT, columnCount);
         args.putString(URL_ARG, url);
+        args.putString(SORT, sort);
         fragment.setArguments(args);
         return fragment;
     }
@@ -70,19 +83,98 @@ public class MovieFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+//            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
             url = getArguments().getString(URL_ARG);
+            String sort = getArguments().getString(SORT);
+            if (sort != null && sort.equals("rating")) {
+                movieComparator = Movie.sortByRatingComp();
+            } else {
+                movieComparator = null;
+            }
         }
     }
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_movie_list, container, false);
+        mList = new ArrayList<>();
 
+        swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        swipeLayout.setOnRefreshListener(this);
+        swipeLayout.setColorSchemeResources(R.color.colorAccent);
+
+
+
+        Log.d("MovieFragment", "the URL is " + url);
+        if (url.equals("recommendation")) {
+            getRecommendations();
+        } else {
+            callRottenTomatoes();
+        }
+
+        Context context = view.getContext();
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.movie_list);
+        if (mColumnCount <= 1) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        } else {
+            recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+        }
+
+        mAdapter = new MyMovieRecyclerViewAdapter(mList, mListener);
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST));
+        return view;
+    }
+
+    @Override
+    public void onRefresh() {
+        swipeLayout.setRefreshing(true);
+        if (url.equals("recommendation")) {
+            getRecommendations();
+        } else {
+            callRottenTomatoes();
+        }
+
+        mAdapter.notifyDataSetChanged();
+        swipeLayout.setRefreshing(false);
+
+    }
+
+    private void getRecommendations() {
+
+        mList.clear();
+        Log.d("MovieFragment", "getting recs");
+        ParseQuery<Movie> query = ParseQuery.getQuery(Movie.class);
+        query.whereEqualTo("rated", true).findInBackground(new FindCallback<Movie>() {
+            @Override
+            public void done(List<Movie> objects, ParseException e) {
+                if (e == null) {
+                    for (int i = 0; i < objects.size(); i++) {
+                        Movie m = objects.get(i);
+                        m.setTitle(m.getString("title"));
+                        m.setPoster(m.getString("poster"));
+                        m.setDescription(m.getString("description"));
+                        mList.add(m);
+                    }
+                    Log.d("MFrag", "Sorting " + mList.size() + " Objects");
+                    if (movieComparator != null) {
+                        Collections.sort(mList, movieComparator);
+                    }
+                    mAdapter.notifyDataSetChanged();
+                } else {
+                    e.printStackTrace();
+                    Log.e("MFrag", e.getMessage());
+                }
+            }
+        });
+    }
+
+    private void callRottenTomatoes() {
         AsyncHttpClient client = new AsyncHttpClient();
-        movieList = new ArrayList<>();
-        urlList = new ArrayList<>();
         client.get(url, new JsonHttpResponseHandler() {
 
             @Override
@@ -91,34 +183,74 @@ public class MovieFragment extends Fragment {
                 JSONArray movies;
                 try {
                     movies = response.getJSONArray("movies");
-                    movieList.clear();
-                    urlList.clear();
+                    mList.clear();
+                    for (int i = 0; i < movies.length(); i++) {
+                        mList.add(null);
+                    }
+                    final ArrayList<String> tList = new ArrayList<>();
                     for (int i = 0; i < movies.length(); i++) {
                         JSONObject cur = movies.getJSONObject(i);
-                        movieList.add(cur.getString("title"));
-                        urlList.add(cur.getJSONObject("posters").getString("original"));
+                        final String title = cur.getString("title");
+                        tList.add(title);
+                        final String synop = cur.getString("synopsis");
+                        final String poster = cur.getJSONObject("posters").getString("original");
+                        ParseQuery<Movie> query = ParseQuery.getQuery(Movie.class);
+                        query.whereEqualTo("title", cur.getString("title"))
+                                .whereEqualTo("description", cur.getString("synopsis"))
+                                .findInBackground(new FindCallback<Movie>() {
+                                    @Override
+                                    public void done(List<Movie> objects, ParseException e) {
+                                        if (e == null) {
+                                            if (objects.size() == 0) {
+                                                Log.d(TAG, "Saving " + title);
+                                                Movie ele = new Movie(title, synop, poster);
+                                                ele.saveInBackground(new SaveCallback() {
+                                                    @Override
+                                                    public void done(ParseException e) {
+                                                        if (e != null) {
+                                                            Log.e(TAG, e.getMessage());
+                                                        }
+                                                    }
+                                                });
+                                                mList.set(tList.indexOf(title), ele);
+                                            } else {
+                                                Movie m = objects.get(0);
+                                                m.setTitle(m.getString("title"));
+                                                m.setPoster(m.getString("poster"));
+                                                m.setDescription(m.getString("description"));
+                                                m.setRated(m.getBoolean("rated"));
+                                                mList.set(tList.indexOf(title), m);
+                                            }
+                                            mAdapter.notifyDataSetChanged();
+                                        } else {
+                                            Log.e("MovieFrag", e.getMessage());
+                                        }
+
+                                    }
+                                });
                     }
-                    mAdapter.notifyDataSetChanged();
+
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Log.e("MovieFragment", e.getMessage());
                 }
             }
         });
+    }
 
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+
+    public void filterOut(List<String> majors) {
+        swipeLayout.setRefreshing(true);
+        for (int i = 0; i < mList.size(); i++) {
+            mList.get(i).filterByMajor(majors);
+            if (!mList.get(i).isRated()) {
+                mList.remove(i--);
             }
-            mAdapter = new MyMovieRecyclerViewAdapter(movieList, urlList, mListener);
-            recyclerView.setAdapter(mAdapter);
-            recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST));
+            Log.d(TAG, "List has " + mList.size() + " items");
         }
+        mAdapter.notifyDataSetChanged();
+        swipeLayout.setRefreshing(false);
+        Log.d(TAG, "Filtered Data");
 
-        return view;
     }
 
     @Override

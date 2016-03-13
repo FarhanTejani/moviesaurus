@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array
+        name="major_list">
+        <item>@string/arch_major</item>
+        <item>@string/id_major</item>
+        <item>@string/cm_major</item>
+        <item>@string/cs_major</item>
+        <item>@string/ae_major</item>
+        <item>@string/bme_major</item>
+        <item>@string/chbe_major</item>
+        <item>@string/civil_major</item>
+        <item>@string/compe_major</item>
+        <item>@string/ee_major</item>
+        <item>@string/enve_major</item>
+        <item>@string/ie_major</item>
+        <item>@string/mse_major</item>
+        <item>@string/me_major</item>
+        <item>@string/nre_major</item>
+        <item>@string/am_major</item>
+        <item>@string/ap_major</item>
+        <item>@string/biochem_major</item>
+        <item>@string/bio_major</item>
+        <item>@string/chem_major</item>
+        <item>@string/dm_major</item>
+        <item>@string/eas_major</item>
+        <item>@string/phys_major</item>
+        <item>@string/psych_major</item>
+        <item>@string/lang_major</item>
+        <item>@string/econ_major</item>
+        <item>@string/hts_major</item>
+        <item>@string/inta_major</item>
+        <item>@string/lmc_major</item>
+        <item>@string/pub_major</item>
+        <item>@string/bus_major</item>
+    </string-array>
+</resources>

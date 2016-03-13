@@ -10,6 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.squareup.picasso.Picasso;
 
 import edu.team2348.moviesaurus.MovieFragment.OnListFragmentInteractionListener;
@@ -21,17 +25,19 @@ import java.util.List;
 
 public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecyclerViewAdapter.ViewHolder> {
 
-    private final List<String> mValues;
-    private final List<String> mPics;
+    private List<Movie> movies;
     private final OnListFragmentInteractionListener mListener;
     private final String TAG = getClass().getSimpleName();
 
-    public MyMovieRecyclerViewAdapter(List<String> items, List<String> pics, OnListFragmentInteractionListener listener) {
-        mValues = items;
+    public MyMovieRecyclerViewAdapter(List<Movie> movies, OnListFragmentInteractionListener listener) {
+        this.movies = movies;
         mListener = listener;
-        mPics = pics;
 
     }
+
+//    public void setMovies(List<Movie> moviesList) {
+//        movies = moviesList;
+//    }
 
 
 
@@ -45,9 +51,12 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecy
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.mContentView.setText(mValues.get(position));
+        if (movies.get(position) != null) {
+            holder.mContentView.setText(movies.get(position).getTitle());
+            holder.rating.setRating(movies.get(position).getRating());
+            Picasso.with(holder.poster.getContext()).load(movies.get(position).getPoster()).resize(240, 350).into(holder.poster);
+        }
 
-        Picasso.with(holder.poster.getContext()).load(mPics.get(position)).resize(240, 350).into(holder.poster);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,7 +74,7 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecy
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return movies.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder  {
@@ -79,12 +88,6 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecy
             super(view);
             mView = view;
             rating = (AppCompatRatingBar) view.findViewById(R.id.rating);
-            rating.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG, "clicked rating");
-                }
-            });
             mContentView = (AppCompatTextView) view.findViewById(R.id.content);
             poster = (AppCompatImageView) view.findViewById(R.id.movie_poster);
         }
@@ -94,7 +97,7 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecy
          * @return String for the URL of the for the item number
          */
         String getPicUrl(int position) {
-            return mPics.get(position);
+            return movies.get(position).getPoster();
         }
 
 

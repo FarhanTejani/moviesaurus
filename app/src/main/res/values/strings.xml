@@ -23,4 +23,38 @@
     <string name="title_activity_user_profile">UserProfileActivity</string>
     <string name="movie_search">Movie Search</string>
     <string name="title_activity_movie_detail">MovieDetailActivity</string>
+    
+    <!-- Strings for Majors -->
+    <string name="arch_major">Architecture</string>
+    <string name="id_major">Industrial Design</string>
+    <string name="cm_major">Computational Media</string>
+    <string name="cs_major">Computer Science</string>
+    <string name="ae_major">Aerospace Engineering</string>
+    <string name="bme_major">Biomedical Engineering</string>
+    <string name="chbe_major">Chemical and Biomolecular Engineering</string>
+    <string name="civil_major">Civil Engineering</string>
+    <string name="compe_major">Computer Engineering</string>
+    <string name="ee_major">Electrical Engineering</string>
+    <string name="enve_major">Environmental Engineering</string>
+    <string name="ie_major">Industrial Engineering</string>
+    <string name="mse_major">Material Science and Engineering</string>
+    <string name="me_major">Mechanical Engineering</string>
+    <string name="nre_major">Nuclear and Radiological Engineering</string>
+    <string name="am_major">Applied Mathematics</string>
+    <string name="ap_major">Applied Physics</string>
+    <string name="biochem_major">Biochemistry</string>
+    <string name="bio_major">Biology</string>
+    <string name="chem_major">Chemistry</string>
+    <string name="dm_major">Discrete Mathematics</string>
+    <string name="eas_major">Earth and Atmospheric Sciences</string>
+    <string name="phys_major">Physics</string>
+    <string name="psych_major">Psychology</string>
+    <string name="lang_major">Applied Languages and Intercultural Studies</string>
+    <string name="econ_major">Economics</string>
+    <string name="hts_major">History, Technology, and Society</string>
+    <string name="inta_major">International Affairs</string>
+    <string name="lmc_major">Literature, Media, and Communication</string>
+    <string name="pub_major">Public Policy</string>
+    <string name="bus_major">Business Administration</string>
+
 </resources>

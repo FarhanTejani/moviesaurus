@@ -7,6 +7,11 @@
         app:showAsAction="collapseActionView|ifRoom"
         app:actionViewClass="android.support.v7.widget.SearchView" />
     <item
+        android:id="@+id/filter"
+        android:title="filter"
+        android:icon="@drawable/ic_tune_24dp"
+        app:showAsAction="ifRoom"/>
+    <item
         android:id="@+id/my_profile"
         android:title="Profile"
         app:showAsAction="never"
