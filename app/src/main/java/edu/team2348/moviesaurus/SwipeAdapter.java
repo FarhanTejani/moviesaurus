@@ -2,7 +2,7 @@ package edu.team2348.moviesaurus;
 
 /**
  * This adapter allows for the selection of which tabs show which movies
- * @author Thomas
+ * @author Thomas Lilly
  * @version 1.0
  */
 
@@ -13,8 +13,10 @@ import android.util.SparseArray;
 import android.view.ViewGroup;
 
 public class SwipeAdapter extends FragmentStatePagerAdapter{
-    int mNumOfTabs;
-    SparseArray<Fragment> registeredFragments = new SparseArray<>();
+    private static final String TAG = "SwipeAdapter";
+
+    private int mNumOfTabs;
+    private SparseArray<Fragment> registeredFragments = new SparseArray<>();
 
     public SwipeAdapter(FragmentManager fm, int NumOfTabs) {
         super(fm);
@@ -33,7 +35,6 @@ public class SwipeAdapter extends FragmentStatePagerAdapter{
                 url = "recommendation";
                 return MovieFragment.newInstance(url, "rating");
             case 2:
-//                url = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?apikey=yedukp76ffytfuy24zsqk7f5";
                 url = "http://api.rottentomatoes.com/api/public/v1.0/lists/dvds/new_releases.json?apikey=yedukp76ffytfuy24zsqk7f5";
                 return MovieFragment.newInstance(url, null);
             default:

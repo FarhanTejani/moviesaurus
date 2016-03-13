@@ -2,7 +2,6 @@ package edu.team2348.moviesaurus;
 
 import android.util.Log;
 
-import com.parse.GetCallback;
 import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -20,24 +19,24 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Class to represent the model of a movie
+ * Class to represent the model of a Movie
  * @author Thomas Lilly
  * @version 1.0
  */
 @ParseClassName("Movie")
 public class Movie extends ParseObject {
+    private static final String TAG = "Movie";
+
     private String title;
     private HashMap<String, Double> rating;
     private String description;
     private String poster;
     private boolean rated;
 
-    public Movie() throws JSONException {
-
-//        title = getString("title");
-//        description = getString("description");
-//        poster = getString("poster");
-//        rated = getBoolean("rated");
+    /**
+     * Default Movie constructor necessary for ParseObject
+     */
+    public Movie() {
 
     }
 
@@ -54,23 +53,42 @@ public class Movie extends ParseObject {
     }
 
 
-
+    /**
+     * Gets title of the Movie
+     * @return the title of the movie
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Sets the whether the Movie is rated or not
+     * @param rated the status of whether the movie is rated or not
+     */
     public void setRated(boolean rated) {
         this.rated = rated;
     }
 
+    /**
+     * Sets the title of the Movie
+     * @param title the title of the Movie
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
+    /**
+     * Sets the poser url of the Movie
+     * @param poster the url of the Movie poster
+     */
     public void setPoster(String poster) {
         this.poster = poster;
     }
 
+    /**
+     * Sets the description of the Movie
+     * @param description the description (synopsis) of the movie
+     */
     public void setDescription(String description) {
         this.description = description;
     }
@@ -79,6 +97,10 @@ public class Movie extends ParseObject {
         return rating;
     }
 
+    /**
+     * Gets a HashMap<String, Double> from the JSON array stored in Parse
+     * @return the rating HashMap of usera and their ratings
+     */
     private HashMap<String, Double> fromJSON() {
         JSONArray storeRating = getJSONArray("ratings");
         HashMap<String, Double> map = new HashMap<>();
@@ -94,6 +116,7 @@ public class Movie extends ParseObject {
         return map;
     }
 
+
     private JSONArray toJSON() {
         JSONArray array = new JSONArray();
         for (Map.Entry<String, Double> item : rating.entrySet()) {
@@ -106,39 +129,55 @@ public class Movie extends ParseObject {
                 Log.e(getClass().getSimpleName(), e.getMessage());
             }
         }
-        Log.d(getClass().getSimpleName(), "Made JSON length " + array.length());
         return array;
     }
 
+    /**
+     * Method to return whether the movie is rated or not
+     * @return the status of whether the movie is rated
+     */
     public boolean isRated() {
         return rating.size() > 0 && rated;
     }
 
+    /**
+     * Method to add rating to the Movie's map of ratings
+     * @param user The users objectID making the rating
+     * @param score The rating (max of 5) of the movie
+     */
     public void addRating(String user, double score) {
-
-        Log.d(getClass().getSimpleName(), "Added Rating");
-        rating = fromJSON();
+        restoreRatings();
         rating.put(user, score);
         rated = true;
         put("ratings", toJSON());
         put("rated", rated);
     }
 
-
-
+    /**
+     * Method to calculate and return the average rating of the Movie
+     * @return the Movie's rating
+     */
     public float getRating() {
         float sum = 0;
-        rating = fromJSON();
+        restoreRatings();
         for (Double d : rating.values()) {
             sum += d;
         }
         return sum / rating.size();
     }
 
+    /**
+     * Getter to return the Movie's poster URL
+     * @return the url of the poster
+     */
     public String getPoster() {
         return poster;
     }
 
+    /**
+     * Filters the ratings map by only keeping the majors in the parameter List
+     * @param major the list of majors to be retained
+     */
     public void filterByMajor(final List<String> major) {
         Set<String> keys = rating.keySet();
         for (final String k : keys) {
@@ -149,22 +188,32 @@ public class Movie extends ParseObject {
                     rating.remove(k);
                 }
             } catch (ParseException e) {
-                Log.e("Movie", e.getMessage());
+                Log.e(TAG, e.getMessage());
             }
         }
 
     }
 
+    /**
+     * Method to restore ratings map to what is currently in Parse
+     */
     public void restoreRatings() {
         rating = fromJSON();
     }
 
 
-
+    /**
+     * Method to get the description (synopsis) of the Movie
+     * @return the description of the Movie
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Method to get a comparator that will sort movies in descending order
+     * @return the descending sort Comparator
+     */
     public static Comparator<Movie> sortByRatingComp() {
         return new Comparator<Movie>() {
             @Override
@@ -180,8 +229,6 @@ public class Movie extends ParseObject {
             }
         };
     }
-
-
 
     @Override
     public boolean equals(Object o) {

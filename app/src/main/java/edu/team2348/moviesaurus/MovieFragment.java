@@ -1,8 +1,6 @@
 package edu.team2348.moviesaurus;
 
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.database.sqlite.SQLiteCantOpenDatabaseException;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -13,8 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ProgressBar;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -27,15 +23,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import cz.msebera.android.httpclient.Header;
-import edu.team2348.moviesaurus.dummy.DummyContent;
-import edu.team2348.moviesaurus.dummy.DummyContent.DummyItem;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * A fragment representing a list of Items.
@@ -45,12 +38,10 @@ import java.util.List;
  */
 public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
     private static final String URL_ARG = "url";
     private static final String SORT = "sort";
     private static final String TAG = "MovieFragment";
-    // TODO: Customize parameters
+
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
     private String url;
@@ -66,12 +57,16 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     public MovieFragment() {
     }
 
-    // TODO: Customize parameter initialization
+    /**
+     * Static factory method that returns an instance of MovieFragment
+     * @param url the REST call to be called
+     * @param sort how the RecylerView should sort the items
+     * @return the instance of MovieFragment
+     */
     @SuppressWarnings("unused")
     public static MovieFragment newInstance(String url, String sort) {
         MovieFragment fragment = new MovieFragment();
         Bundle args = new Bundle();
-//        args.putInt(ARG_COLUMN_COUNT, columnCount);
         args.putString(URL_ARG, url);
         args.putString(SORT, sort);
         fragment.setArguments(args);
@@ -81,9 +76,7 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
-//            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
             url = getArguments().getString(URL_ARG);
             String sort = getArguments().getString(SORT);
             if (sort != null && sort.equals("rating")) {
@@ -94,9 +87,6 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         }
     }
 
-
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -106,10 +96,6 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(this);
         swipeLayout.setColorSchemeResources(R.color.colorAccent);
-
-
-
-        Log.d("MovieFragment", "the URL is " + url);
         if (url.equals("recommendation")) {
             getRecommendations();
         } else {
@@ -144,10 +130,11 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     }
 
+    /**
+     * Method to get recommendations for the current user
+     */
     private void getRecommendations() {
-
         mList.clear();
-        Log.d("MovieFragment", "getting recs");
         ParseQuery<Movie> query = ParseQuery.getQuery(Movie.class);
         query.whereEqualTo("rated", true).findInBackground(new FindCallback<Movie>() {
             @Override
@@ -160,19 +147,21 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                         m.setDescription(m.getString("description"));
                         mList.add(m);
                     }
-                    Log.d("MFrag", "Sorting " + mList.size() + " Objects");
                     if (movieComparator != null) {
                         Collections.sort(mList, movieComparator);
                     }
                     mAdapter.notifyDataSetChanged();
                 } else {
                     e.printStackTrace();
-                    Log.e("MFrag", e.getMessage());
+                    Log.e(TAG, e.getMessage());
                 }
             }
         });
     }
 
+    /**
+     * Method to get list of movies from Rotten Tomatoes
+     */
     private void callRottenTomatoes() {
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(url, new JsonHttpResponseHandler() {
@@ -202,7 +191,6 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                     public void done(List<Movie> objects, ParseException e) {
                                         if (e == null) {
                                             if (objects.size() == 0) {
-                                                Log.d(TAG, "Saving " + title);
                                                 Movie ele = new Movie(title, synop, poster);
                                                 ele.saveInBackground(new SaveCallback() {
                                                     @Override
@@ -231,13 +219,16 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     }
 
                 } catch (JSONException e) {
-                    Log.e("MovieFragment", e.getMessage());
+                    Log.e(TAG, e.getMessage());
                 }
             }
         });
     }
 
-
+    /**
+     * Method to filter movies by retaining the majors in parameter list
+     * @param majors the list of majors to retain
+     */
     public void filterOut(List<String> majors) {
         swipeLayout.setRefreshing(true);
         for (int i = 0; i < mList.size(); i++) {
@@ -245,11 +236,9 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             if (!mList.get(i).isRated()) {
                 mList.remove(i--);
             }
-            Log.d(TAG, "List has " + mList.size() + " items");
         }
         mAdapter.notifyDataSetChanged();
         swipeLayout.setRefreshing(false);
-        Log.d(TAG, "Filtered Data");
 
     }
 
@@ -275,13 +264,8 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onListFragmentInteraction(MyMovieRecyclerViewAdapter.ViewHolder item);
     }
 }

@@ -20,12 +20,14 @@ import com.parse.SaveCallback;
 /**
  * Class that allows user to view their current profile information and update their information
  * @author Faizan Virani
+ * @author Thomas Lilly
  * @version 1.0
  */
 
 public class UserProfileActivity extends AppCompatActivity {
+    private static final String TAG = "UserProfileActivity";
 
-    ParseUser user = ParseUser.getCurrentUser();
+    private ParseUser user = ParseUser.getCurrentUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +35,6 @@ public class UserProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_profile);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         ((TextView) findViewById(R.id.user_profile_name)).setText(user.getUsername());
 
         findViewById(R.id.new_email_button).setOnClickListener(new View.OnClickListener() {
@@ -83,7 +84,9 @@ public class UserProfileActivity extends AppCompatActivity {
         return false;
     }
 
-
+    /**
+     * Notifies user that the profile was saved successfully
+     */
     private void saveSuccess() {
         Snackbar.make(findViewById(R.id.user_profile_activity_layout), "Changed Successfully", Snackbar.LENGTH_LONG).show();
     }

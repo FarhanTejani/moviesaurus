@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -27,8 +28,8 @@ public class SigninActivity extends AppCompatActivity {
 
     Button signUpBtn;
     Button signInBtn;
-    EditText email;
-    EditText pass;
+    TextInputEditText email;
+    TextInputEditText pass;
     Intent loggedInIntent;
     Intent signUpIntent;
 
@@ -41,8 +42,8 @@ public class SigninActivity extends AppCompatActivity {
 
         signUpBtn = (Button) findViewById(R.id.register_button);
         signInBtn = (Button) findViewById(R.id.login_button);
-        email = (EditText) findViewById(R.id.email_edit_text);
-        pass = (EditText) findViewById(R.id.password_edit_text);
+        email = (TextInputEditText) findViewById(R.id.email_edit_text);
+        pass = (TextInputEditText) findViewById(R.id.password_edit_text);
         loggedInIntent = new Intent(this, MainActivity.class);
         signUpIntent = new Intent(this, RegisterActivity.class);
         ParseUser userPersist = ParseUser.getCurrentUser();

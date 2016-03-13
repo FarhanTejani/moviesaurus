@@ -1,67 +1,54 @@
 package edu.team2348.moviesaurus;
 
-import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.support.v7.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.parse.LogOutCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import edu.team2348.moviesaurus.dummy.DummyContent;
-
 /**
  * Home/Main Activity of the application. It allows you to select form the available functionality
  * of the application
  * @author Faizan Virani
  * @author Thomas Lilly
- * @version 1.0
+ * @version 1.1
  */
 public class MainActivity extends AppCompatActivity implements MovieFragment.OnListFragmentInteractionListener {
 
-    TextView userWelcome;
-    Button searchMoviesButton;
-    Intent intentSearch;
-    Intent newReleasesIntent;
-    Intent newDVDReleasesIntent;
-    Intent viewUserProfileIntent;
-    Intent signInIntent;
-    TabLayout tabLayout;
-    PagerAdapter adapter;
-    ViewPager viewPager;
-    MenuItem filter;
-    CharSequence[] titles = {"New Releases", "Recommendations", "Top Box Office"};
+    private static final String TAG = "MainActivity";
+
+    private Intent viewUserProfileIntent;
+    private Intent signInIntent;
+    private TabLayout tabLayout;
+    private PagerAdapter adapter;
+    private ViewPager viewPager;
+    private MenuItem filter;
+    private CharSequence[] titles = {"New Releases", "Recommendations", "Top Box Office"};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
         setSupportActionBar(toolbar);
         toolbar.showOverflowMenu();
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        // Setting up the TabLayout
         tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(this, R.drawable.ic_whatshot_24dp)));
         tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(this, R.drawable.ic_trending_up_24dp)));
         tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(this, R.drawable.ic_disc_full_24dp)));
@@ -90,8 +78,6 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
                     filter.setEnabled(true);
                     filter.getIcon().setAlpha(255);
                 }
-
-
             }
 
             @Override
@@ -113,12 +99,6 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
         signInIntent = new Intent(this, SigninActivity.class);
         viewUserProfileIntent = new Intent(this, UserProfileActivity.class);
 
-
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();  // Always call the superclass method first
 
     }
 
@@ -176,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
                     public void done(ParseException e) {
                         if (e != null) {
                             //displays Parse Error in a toast
-                            Log.e("ParseError", e.getMessage());
+                            Log.e(TAG, e.getMessage());
                             Context context = getApplicationContext();
                             CharSequence text = e.getMessage();
                             int duration = Toast.LENGTH_SHORT;
@@ -238,10 +218,6 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
                 builder.create();
                 AlertDialog dialog = builder.create();
                 dialog.show();
-
-
-//                adapter.notifyDataSetChanged();
-
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -249,8 +225,6 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
 
     @Override
     public void onListFragmentInteraction(MyMovieRecyclerViewAdapter.ViewHolder item) {
-
-        Log.d("MainActivty", "clicked item" + item.getLayoutPosition());
         Intent movieDetail = new Intent(this, MovieDetailActivity.class);
         movieDetail.putExtra("title", item.mContentView.getText());
         movieDetail.putExtra("poster", item.getPicUrl(item.getLayoutPosition()));

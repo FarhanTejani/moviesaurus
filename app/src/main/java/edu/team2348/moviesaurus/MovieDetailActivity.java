@@ -2,8 +2,6 @@ package edu.team2348.moviesaurus;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
@@ -24,8 +22,15 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+/**
+ * Activity to show the details of the selected Movie
+ * @author Thomas
+ * @version 1.0
+ */
 public class MovieDetailActivity extends AppCompatActivity {
-    AppCompatRatingBar ratingBar;
+    private static final String TAG = "MovieDetailActivity";
+
+    private AppCompatRatingBar ratingBar;
     private String poster;
     private CharSequence title;
     private float myRating;
@@ -70,12 +75,12 @@ public class MovieDetailActivity extends AppCompatActivity {
                                                 @Override
                                                 public void done(ParseException e) {
                                                     if (e != null) {
-                                                        Log.e("MovieDetail", e.getMessage());
+                                                        Log.e(TAG, e.getMessage());
                                                     }
                                                 }
                                             });
                                         } else {
-                                            Log.e("MovieDetail", e.getMessage());
+                                            Log.e(TAG, e.getMessage());
                                         }
                                     }
                                 });
@@ -102,8 +107,6 @@ public class MovieDetailActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(title);
         }
-
-
 
     }
 
