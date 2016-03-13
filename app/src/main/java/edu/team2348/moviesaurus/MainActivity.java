@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
     private PagerAdapter adapter;
     private ViewPager viewPager;
     private MenuItem filter;
-    private CharSequence[] titles = {"New Releases", "Recommendations", "Top Box Office"};
+    private CharSequence[] titles = {"New Releases", "Recommendations", "DVD Releases"};
 
 
     @Override
