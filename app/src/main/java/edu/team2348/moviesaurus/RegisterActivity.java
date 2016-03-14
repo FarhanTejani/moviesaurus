@@ -62,9 +62,8 @@ public class RegisterActivity extends AppCompatActivity {
                                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                                 imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
                             }
-                            Snackbar snackbar = Snackbar
-                                    .make(findViewById(R.id.register_layout), e.getMessage(), Snackbar.LENGTH_LONG);
-                            snackbar.show();
+                            Snackbar
+                                    .make(findViewById(R.id.register_layout), e.getMessage(), Snackbar.LENGTH_LONG).show();
                         }
                     }
                 });

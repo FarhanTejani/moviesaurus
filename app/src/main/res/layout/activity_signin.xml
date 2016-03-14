@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:id="@+id/signin_layout"
     tools:context="edu.team2348.moviesaurus.SigninActivity">
 
     <android.support.design.widget.AppBarLayout

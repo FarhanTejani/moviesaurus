@@ -25,13 +25,14 @@ import com.parse.ParseUser;
  * @version 1.0
  */
 public class SigninActivity extends AppCompatActivity {
+    private static final String TAG = "SigninActivity";
 
-    Button signUpBtn;
-    Button signInBtn;
-    TextInputEditText email;
-    TextInputEditText pass;
-    Intent loggedInIntent;
-    Intent signUpIntent;
+    private Button signUpBtn;
+    private Button signInBtn;
+    private TextInputEditText email;
+    private TextInputEditText pass;
+    private Intent loggedInIntent;
+    private Intent signUpIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +56,7 @@ public class SigninActivity extends AppCompatActivity {
         signInBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("SignIn", "No persistent user");
+                Log.d(TAG, "No persistent user");
                 ParseUser.logInInBackground(
                         email.getText().toString(),
                         pass.getText().toString(),
@@ -66,6 +67,11 @@ public class SigninActivity extends AppCompatActivity {
                                     startActivity(loggedInIntent);
                                     finish();
                                 } else {
+                                    if (getCurrentFocus() != null) {
+                                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                                    }
+                                    Snackbar.make(findViewById(R.id.signin_layout), "Login Failed!", Snackbar.LENGTH_LONG).show();
                                     Log.e("ParseError", e.getMessage());
                                 }
                             }
