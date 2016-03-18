@@ -43,10 +43,12 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
 
     private Intent viewUserProfileIntent;
     private Intent signInIntent;
+    private Intent adminIntent;
     private TabLayout tabLayout;
     private PagerAdapter adapter;
     private ViewPager viewPager;
     private MenuItem filter;
+    private MenuItem adminControl;
     private CharSequence[] titles = {"New Releases", "Recommendations", "DVD Releases"};
 
 
@@ -98,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
         }
         signInIntent = new Intent(this, SigninActivity.class);
         viewUserProfileIntent = new Intent(this, UserProfileActivity.class);
-
+        adminIntent = new Intent(this, AdminActivity.class);
 
     }
 
@@ -113,6 +115,11 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, MovieSearchActivity.class)));
         searchView.setIconifiedByDefault(false);
+        adminControl = menu.getItem(3);
+        if (!ParseUser.getCurrentUser().getBoolean("admin")) {
+            adminControl.setEnabled(false);
+            adminControl.setVisible(false);
+        }
 
         MenuItem menuItem = menu.findItem(R.id.search);
         MenuItemCompat.setOnActionExpandListener(menuItem, new MenuItemCompat.OnActionExpandListener() {
@@ -167,6 +174,9 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
                 });
                 startActivity(signInIntent);
                 finish();
+                return true;
+            case R.id.admin_options:
+                startActivity(adminIntent);
                 return true;
             case R.id.filter:
                 final ArrayList<Integer> mSelectedItems = new ArrayList<>();  // Where we track the selected items

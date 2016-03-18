@@ -64,8 +64,17 @@ public class SigninActivity extends AppCompatActivity {
                             @Override
                             public void done(ParseUser user, ParseException e) {
                                 if (user != null) {
-                                    startActivity(loggedInIntent);
-                                    finish();
+                                    if (user.getBoolean("banned")) {
+                                        if (getCurrentFocus() != null) {
+                                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                                        }
+                                        Snackbar.make(findViewById(R.id.signin_layout), "Sorry you're banned", Snackbar.LENGTH_LONG).show();
+                                        user.logOutInBackground();
+                                    } else {
+                                        startActivity(loggedInIntent);
+                                        finish();
+                                    }
                                 } else {
                                     if (getCurrentFocus() != null) {
                                         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
