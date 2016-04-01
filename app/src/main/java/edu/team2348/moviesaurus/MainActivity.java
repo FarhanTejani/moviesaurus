@@ -25,6 +25,9 @@ import android.widget.Toast;
 
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
+import com.parse.ParsePush;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -98,6 +101,11 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
         }
         signInIntent = new Intent(this, SigninActivity.class);
         viewUserProfileIntent = new Intent(this, UserProfileActivity.class);
+        ParseQuery query = ParseInstallation.getQuery();
+        query.whereEqualTo("channels", "og");
+        ParsePush push = new ParsePush();
+        push.setMessage("Trying to get this working");
+        push.sendInBackground();
 
 
     }
