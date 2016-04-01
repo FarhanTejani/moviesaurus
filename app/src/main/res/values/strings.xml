@@ -23,7 +23,7 @@
     <string name="title_activity_user_profile">UserProfileActivity</string>
     <string name="movie_search">Movie Search</string>
     <string name="title_activity_movie_detail">MovieDetailActivity</string>
-    
+
     <!-- Strings for Majors -->
     <string name="arch_major">Architecture</string>
     <string name="id_major">Industrial Design</string>
@@ -56,5 +56,6 @@
     <string name="lmc_major">Literature, Media, and Communication</string>
     <string name="pub_major">Public Policy</string>
     <string name="bus_major">Business Administration</string>
+    <string name="title_activity_admin">AdminActivity</string>
 
 </resources>

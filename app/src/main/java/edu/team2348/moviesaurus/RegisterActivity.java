@@ -51,6 +51,7 @@ public class RegisterActivity extends AppCompatActivity {
                 user.setEmail(email.getText().toString());
                 user.setUsername(email.getText().toString());
                 user.setPassword(password.getText().toString());
+                user.put("banned", false);
                 user.signUpInBackground(new SignUpCallback() {
                     @Override
                     public void done(ParseException e) {
