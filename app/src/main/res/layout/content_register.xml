@@ -33,6 +33,19 @@
             android:hint="Password"
             android:id="@+id/registration_password"/>
     </android.support.design.widget.TextInputLayout>
+    <android.support.v7.widget.AppCompatTextView
+        android:paddingTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/select_major_prompt"
+        android:textSize="18dp"/>
+    <android.support.v7.widget.AppCompatSpinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/major_spinner"
+        android:prompt="@string/select_major_prompt"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"/>
 
     <Button
         android:layout_width="wrap_content"

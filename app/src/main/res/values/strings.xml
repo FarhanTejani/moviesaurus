@@ -25,6 +25,7 @@
     <string name="title_activity_movie_detail">MovieDetailActivity</string>
 
     <!-- Strings for Majors -->
+    <string name="select_major_prompt">Select Major</string>
     <string name="arch_major">Architecture</string>
     <string name="id_major">Industrial Design</string>
     <string name="cm_major">Computational Media</string>

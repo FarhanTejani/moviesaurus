@@ -2,20 +2,23 @@ package edu.team2348.moviesaurus;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
+import java.util.Arrays;
 
 /**
  * Class that allows user to view their current profile information and update their information
@@ -35,6 +38,9 @@ public class UserProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_profile);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("My Profile");
+        }
         ((TextView) findViewById(R.id.user_profile_name)).setText(user.getUsername());
 
         findViewById(R.id.new_email_button).setOnClickListener(new View.OnClickListener() {
@@ -58,13 +64,40 @@ public class UserProfileActivity extends AppCompatActivity {
         findViewById(R.id.new_password_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                user.setPassword(((EditText)findViewById(R.id.new_password_edit_text)).getText().toString());
+                user.setPassword(((EditText) findViewById(R.id.new_password_edit_text)).getText().toString());
                 ((EditText) findViewById(R.id.new_password_edit_text)).setText("");
                 user.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
                         if (e != null) {
-                            Log.e("Parse Error", e.getMessage());
+                            Log.e(TAG, e.getMessage());
+                        } else {
+                            saveSuccess();
+                        }
+                    }
+                });
+            }
+        });
+
+        final AppCompatSpinner spinner = (AppCompatSpinner) findViewById(R.id.major_spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        String[] preList = getResources().getStringArray(R.array.major_list);
+        Arrays.sort(preList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, preList);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+        spinner.setPrompt("Select Major");
+        findViewById(R.id.new_major_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                user.put("major", spinner.getSelectedItem());
+                user.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e != null) {
+                            Log.e(TAG, e.getMessage());
                         } else {
                             saveSuccess();
                         }
