@@ -152,7 +152,6 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     }
                     mAdapter.notifyDataSetChanged();
                 } else {
-                    e.printStackTrace();
                     Log.e(TAG, e.getMessage());
                 }
             }

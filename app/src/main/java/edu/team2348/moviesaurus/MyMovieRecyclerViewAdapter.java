@@ -5,22 +5,15 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.squareup.picasso.Picasso;
 
-import edu.team2348.moviesaurus.MovieFragment.OnListFragmentInteractionListener;
-
-
-
 import java.util.List;
+
+import edu.team2348.moviesaurus.MovieFragment.OnListFragmentInteractionListener;
 
 /**
  * The MovieRecyclerAdapter for the RecyclerView

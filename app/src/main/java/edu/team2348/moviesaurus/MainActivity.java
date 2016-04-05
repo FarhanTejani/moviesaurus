@@ -39,16 +39,33 @@ import java.util.Arrays;
  */
 public class MainActivity extends AppCompatActivity implements MovieFragment.OnListFragmentInteractionListener {
 
+    /**
+     * Tag to identify MainActivity in Logger
+     */
     private static final String TAG = "MainActivity";
-
+    /**
+     * Intent to create activity to view profile
+     */
     private Intent viewUserProfileIntent;
+    /**
+     * Intent to take user back to SignIn when logging out
+     */
     private Intent signInIntent;
+    /**
+     * Intent to start the administrator view of the app
+     */
     private Intent adminIntent;
-    private TabLayout tabLayout;
-    private PagerAdapter adapter;
+    /**
+     * The container for fragments in the TabLayout
+     */
     private ViewPager viewPager;
+    /**
+     * The filter button that allows you to filter ratings by major
+     */
     private MenuItem filter;
-    private MenuItem adminControl;
+    /**
+     * The titles of the each tab in order
+     */
     private CharSequence[] titles = {"New Releases", "Recommendations", "DVD Releases"};
 
 
@@ -59,14 +76,14 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.showOverflowMenu();
-        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         // Setting up the TabLayout
         tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(this, R.drawable.ic_whatshot_24dp)));
         tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(this, R.drawable.ic_trending_up_24dp)));
         tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(this, R.drawable.ic_disc_full_24dp)));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         viewPager = (ViewPager) findViewById(R.id.pager);
-        adapter = new SwipeAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        PagerAdapter adapter = new SwipeAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -100,8 +117,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
         }
         signInIntent = new Intent(this, SigninActivity.class);
         viewUserProfileIntent = new Intent(this, UserProfileActivity.class);
-
-
+        adminIntent = new Intent(this, AdminActivity.class);
     }
 
     @Override
@@ -115,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, MovieSearchActivity.class)));
         searchView.setIconifiedByDefault(false);
-        adminControl = menu.getItem(3);
+        MenuItem adminControl = menu.getItem(3);
         if (!ParseUser.getCurrentUser().getBoolean("admin")) {
             adminControl.setEnabled(false);
             adminControl.setVisible(false);
@@ -179,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
                 startActivity(adminIntent);
                 return true;
             case R.id.filter:
-                final ArrayList<Integer> mSelectedItems = new ArrayList<>();  // Where we track the selected items
+                final ArrayList<String> mSelectedItems = new ArrayList<>();  // Where we track the selected items
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 // Set the dialog title
                 String[] preList = getResources().getStringArray(R.array.major_list);
@@ -195,10 +211,10 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
                                                         boolean isChecked) {
                                         if (isChecked) {
                                             // If the user checked the item, add it to the selected items
-                                            mSelectedItems.add(which);
-                                        } else if (mSelectedItems.contains(which)) {
+                                            mSelectedItems.add(list[which]);
+                                        } else if (mSelectedItems.contains(list[which])) {
                                             // Else, if the item is already in the array, remove it
-                                            mSelectedItems.remove(Integer.valueOf(which));
+                                            mSelectedItems.remove(list[which]);
                                         }
                                     }
                                 })
@@ -208,13 +224,9 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
                             public void onClick(DialogInterface dialog, int id) {
                                 // User clicked OK, so save the mSelectedItems results somewhere
                                 // or return them to the component that opened the dialog
-                                ArrayList<String> selectedMajors = new ArrayList<>();
-                                for (Integer i : mSelectedItems) {
-                                    selectedMajors.add(list[i]);
-                                }
                                 SwipeAdapter a = (SwipeAdapter) viewPager.getAdapter();
                                 MovieFragment mf = (MovieFragment) a.getRegisteredFragment(viewPager.getCurrentItem());
-                                mf.filterOut(selectedMajors);
+                                mf.filterOut(mSelectedItems);
                                 dialog.dismiss();
                             }
                         })

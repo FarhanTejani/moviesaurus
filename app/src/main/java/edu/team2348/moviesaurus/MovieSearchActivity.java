@@ -82,7 +82,7 @@ public class MovieSearchActivity extends AppCompatActivity implements MovieFragm
                         }
                         mAdapter.notifyDataSetChanged();
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        Log.e(TAG, e.getMessage());
                     }
                 }
             });

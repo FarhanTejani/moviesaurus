@@ -28,7 +28,7 @@ public class Movie extends ParseObject {
     private static final String TAG = "Movie";
 
     private String title;
-    private HashMap<String, Double> rating;
+    private Map<String, Double> rating;
     private String description;
     private String poster;
     private boolean rated;
@@ -93,15 +93,15 @@ public class Movie extends ParseObject {
         this.description = description;
     }
 
-    public HashMap<String, Double> getRatingMap() {
+    public Map<String, Double> getRatingMap() {
         return rating;
     }
 
     /**
      * Gets a HashMap<String, Double> from the JSON array stored in Parse
-     * @return the rating HashMap of usera and their ratings
+     * @return the rating HashMap of users and their ratings
      */
-    private HashMap<String, Double> fromJSON() {
+    private Map<String, Double> fromJSON() {
         JSONArray storeRating = getJSONArray("ratings");
         HashMap<String, Double> map = new HashMap<>();
         for (int i = 0; i < storeRating.length(); i++) {
@@ -110,7 +110,7 @@ public class Movie extends ParseObject {
                 o = storeRating.getJSONObject(i);
                 map.put(o.getString("user"), o.getDouble("rating"));
             } catch (JSONException e) {
-                e.printStackTrace();
+                Log.e(TAG, e.toString());
             }
         }
         return map;
@@ -237,6 +237,11 @@ public class Movie extends ParseObject {
         if (!(o instanceof Movie)) return false;
         Movie other = (Movie) o;
         return title.equals(other.title) && poster.equals(other.poster) && description.equals(other.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return description.hashCode();
     }
 
 
