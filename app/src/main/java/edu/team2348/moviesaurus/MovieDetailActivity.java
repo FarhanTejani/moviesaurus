@@ -40,13 +40,15 @@ public class MovieDetailActivity extends AppCompatActivity {
         poster = getIntent().getStringExtra("poster");
         title = getIntent().getCharSequenceExtra("title");
 
+        final int width = 330;
+        final int height = 450;
         setContentView(R.layout.activity_movie_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.showOverflowMenu();
         setSupportActionBar(toolbar);
-        Picasso.with(this).load(poster).resize(330, 450)
+        Picasso.with(this).load(poster).resize(width, height)
                 .into((AppCompatImageView) findViewById(R.id.big_movie_poster));
-        Button rateButton = (Button) findViewById(R.id.rate_button);
+        final Button rateButton = (Button) findViewById(R.id.rate_button);
         ratingBar = (AppCompatRatingBar) findViewById(R.id.ratingBar_detail);
         myRating = getIntent().getFloatExtra("rating", 0);
         ratingBar.setRating(myRating);
@@ -61,8 +63,8 @@ public class MovieDetailActivity extends AppCompatActivity {
     private class RatingClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(MovieDetailActivity.this);
-            LayoutInflater inflater = MovieDetailActivity.this.getLayoutInflater();
+            final AlertDialog.Builder builder = new AlertDialog.Builder(MovieDetailActivity.this);
+            final LayoutInflater inflater = MovieDetailActivity.this.getLayoutInflater();
             builder.setTitle("Movie Rating");
             builder.setView(inflater.inflate(R.layout.rating_dialog, null));
 
@@ -72,9 +74,9 @@ public class MovieDetailActivity extends AppCompatActivity {
                     dialog.dismiss();
                 }
             });
-            AlertDialog dialog = builder.create();
+            final AlertDialog dialog = builder.create();
             dialog.show();
-            AppCompatRatingBar bar = (AppCompatRatingBar) dialog.findViewById(R.id.dialog_rating);
+            final AppCompatRatingBar bar = (AppCompatRatingBar) dialog.findViewById(R.id.dialog_rating);
             bar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
                 @Override
                 public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
@@ -88,7 +90,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     private class PositiveClickListener implements DialogInterface.OnClickListener {
         public void onClick(DialogInterface dialog, int id) {
             ratingBar.setRating(myRating);
-            ParseQuery<Movie> query = ParseQuery.getQuery(Movie.class);
+            final ParseQuery<Movie> query = ParseQuery.getQuery(Movie.class);
             query.whereEqualTo("title", title.toString())
                     .whereEqualTo("poster", poster)
                     .findInBackground(new FindCallback<Movie>() {

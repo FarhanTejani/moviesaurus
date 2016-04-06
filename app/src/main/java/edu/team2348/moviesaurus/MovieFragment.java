@@ -41,7 +41,7 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private static final String URL_ARG = "url";
     private static final String SORT = "sort";
     private static final String TAG = "MovieFragment";
-    private static final String titleLit = "title";
+    private static final String TITLE = "title";
 
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
@@ -66,8 +66,8 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
      */
     @SuppressWarnings("unused")
     public static MovieFragment newInstance(String url, String sort) {
-        MovieFragment fragment = new MovieFragment();
-        Bundle args = new Bundle();
+        final MovieFragment fragment = new MovieFragment();
+        final Bundle args = new Bundle();
         args.putString(URL_ARG, url);
         args.putString(SORT, sort);
         fragment.setArguments(args);
@@ -79,8 +79,8 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             url = getArguments().getString(URL_ARG);
-            String sort = getArguments().getString(SORT);
-            if (sort != null && sort.equals("rating")) {
+            final String sort = getArguments().getString(SORT);
+            if ("rating".equals(sort)) {
                 movieComparator = Movie.sortByRatingComp();
             } else {
                 movieComparator = null;
@@ -97,14 +97,14 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(this);
         swipeLayout.setColorSchemeResources(R.color.colorAccent);
-        if (url.equals("recommendation")) {
+        if ("recommendation".equals(url)) {
             getRecommendations();
         } else {
             callRottenTomatoes();
         }
 
-        Context context = view.getContext();
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.movie_list);
+        final Context context = view.getContext();
+        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.movie_list);
         if (mColumnCount <= 1) {
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
         } else {
@@ -120,7 +120,7 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @Override
     public void onRefresh() {
         swipeLayout.setRefreshing(true);
-        if (url.equals("recommendation")) {
+        if ("recommendation".equals(url)) {
             getRecommendations();
         } else {
             callRottenTomatoes();
@@ -136,13 +136,13 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
      */
     private void getRecommendations() {
         mList.clear();
-        ParseQuery<Movie> query = ParseQuery.getQuery(Movie.class);
+        final ParseQuery<Movie> query = ParseQuery.getQuery(Movie.class);
         query.whereEqualTo("rated", true).findInBackground(new FindCallback<Movie>() {
             @Override
             public void done(List<Movie> objects, ParseException e) {
                 if (e == null) {
                     for (int i = 0; i < objects.size(); i++) {
-                        Movie m = objects.get(i);
+                        final Movie m = objects.get(i);
                         m.setTitle(m.getString("title"));
                         m.setPoster(m.getString("poster"));
                         m.setDescription(m.getString("description"));
@@ -163,7 +163,7 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
      * Method to get list of movies from Rotten Tomatoes
      */
     private void callRottenTomatoes() {
-        AsyncHttpClient client = new AsyncHttpClient();
+        final AsyncHttpClient client = new AsyncHttpClient();
         client.get(url, new rtHTTPResponseHandler());
     }
 
@@ -181,13 +181,13 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 }
                 final ArrayList<String> tList = new ArrayList<>();
                 for (int i = 0; i < movies.length(); i++) {
-                    JSONObject cur = movies.getJSONObject(i);
-                    final String title = cur.getString(titleLit);
+                    final JSONObject cur = movies.getJSONObject(i);
+                    final String title = cur.getString(TITLE);
                     tList.add(title);
                     final String synop = cur.getString("synopsis");
                     final String poster = cur.getJSONObject("posters").getString("original");
-                    ParseQuery<Movie> query = ParseQuery.getQuery(Movie.class);
-                    query.whereEqualTo(titleLit, cur.getString(titleLit))
+                    final ParseQuery<Movie> query = ParseQuery.getQuery(Movie.class);
+                    query.whereEqualTo(TITLE, cur.getString(TITLE))
                             .whereEqualTo("description", cur.getString("synopsis"))
                             .findInBackground(new FoundMovieCallback(title, synop, poster, tList));
                 }
@@ -216,7 +216,7 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         public void done(List<Movie> objects, ParseException e) {
             if (e == null) {
                 if (objects.size() == 0) {
-                    Movie ele = new Movie(title, synopsis, poster);
+                    final Movie ele = new Movie(title, synopsis, poster);
                     ele.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
@@ -227,8 +227,8 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     });
                     mList.set(tList.indexOf(title), ele);
                 } else {
-                    Movie m = objects.get(0);
-                    m.setTitle(m.getString(titleLit));
+                    final Movie m = objects.get(0);
+                    m.setTitle(m.getString(TITLE));
                     m.setPoster(m.getString("poster"));
                     m.setDescription(m.getString("description"));
                     m.setRated(m.getBoolean("rated"));

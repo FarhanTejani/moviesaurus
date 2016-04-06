@@ -40,7 +40,7 @@ public class MovieSearchActivity extends AppCompatActivity implements MovieFragm
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_movie_search);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         handleIntent(getIntent());
 
@@ -59,13 +59,13 @@ public class MovieSearchActivity extends AppCompatActivity implements MovieFragm
      */
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
+            final String query = intent.getStringExtra(SearchManager.QUERY);
             if (getSupportActionBar() != null) {
                 getSupportActionBar().setTitle("Searched \"" + query + "\"");
             }
-            AsyncHttpClient client = new AsyncHttpClient();
+            final AsyncHttpClient client = new AsyncHttpClient();
             movieList = new ArrayList<>();
-            RecyclerView view = (RecyclerView) findViewById(R.id.fragment_container);
+            final RecyclerView view = (RecyclerView) findViewById(R.id.fragment_container);
             client.get(url + query.replace(" ", "+"), new JsonHttpResponseHandler() {
 
                 @Override
@@ -76,7 +76,7 @@ public class MovieSearchActivity extends AppCompatActivity implements MovieFragm
                         movies = response.getJSONArray("movies");
                         movieList.clear();
                         for (int i = 0; i < movies.length(); i++) {
-                            JSONObject cur = movies.getJSONObject(i);
+                            final JSONObject cur = movies.getJSONObject(i);
                             movieList.add(new Movie(cur.getString("title"), cur.getString("synopsis"),
                                     cur.getJSONObject("posters").getString("original")));
                         }
@@ -88,7 +88,7 @@ public class MovieSearchActivity extends AppCompatActivity implements MovieFragm
             });
 
             if (view != null) {
-                Context context = view.getContext();
+                final Context context = view.getContext();
                 view.setLayoutManager(new LinearLayoutManager(context));
                 mAdapter = new MyMovieRecyclerViewAdapter(movieList, this);
                 view.setAdapter(mAdapter);
@@ -100,11 +100,11 @@ public class MovieSearchActivity extends AppCompatActivity implements MovieFragm
 
 
     @Override
-    public void onListFragmentInteraction(MyMovieRecyclerViewAdapter.ViewHolder item) {
-        Intent movieDetail = new Intent(this, MovieDetailActivity.class);
-        movieDetail.putExtra("title", item.mContentView.getText());
-        movieDetail.putExtra("poster", item.getPicUrl(item.getLayoutPosition()));
-        movieDetail.putExtra("rating", item.rating.getRating());
+    public void onListFragmentInteraction(Movie item) {
+        final Intent movieDetail = new Intent(this, MovieDetailActivity.class);
+        movieDetail.putExtra("title", item.getTitle());
+        movieDetail.putExtra("poster", item.getPoster());
+        movieDetail.putExtra("rating", item.getRating());
         startActivity(movieDetail);
 
     }

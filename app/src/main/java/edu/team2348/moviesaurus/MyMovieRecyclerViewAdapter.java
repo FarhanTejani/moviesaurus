@@ -39,17 +39,19 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecy
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
+        final View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_movie, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
+        final int width = 240;
+        final int height = 350;
         if (movies.get(position) != null) {
             holder.mContentView.setText(movies.get(position).getTitle());
             holder.rating.setRating(movies.get(position).getRating());
-            Picasso.with(holder.poster.getContext()).load(movies.get(position).getPoster()).resize(240, 350).into(holder.poster);
+            Picasso.with(holder.poster.getContext()).load(movies.get(position).getPoster()).resize(width, height).into(holder.poster);
         }
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

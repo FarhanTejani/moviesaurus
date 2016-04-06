@@ -34,16 +34,16 @@ public class SigninActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Button signUpBtn = (Button) findViewById(R.id.register_button);
-        Button signInBtn = (Button) findViewById(R.id.login_button);
+        final Button signUpBtn = (Button) findViewById(R.id.register_button);
+        final Button signInBtn = (Button) findViewById(R.id.login_button);
         email = (TextInputEditText) findViewById(R.id.email_edit_text);
         pass = (TextInputEditText) findViewById(R.id.password_edit_text);
         loggedInIntent = new Intent(this, MainActivity.class);
         signUpIntent = new Intent(this, RegisterActivity.class);
-        ParseUser userPersist = ParseUser.getCurrentUser();
+        final ParseUser userPersist = ParseUser.getCurrentUser();
         if (userPersist != null) {
             startActivity(loggedInIntent);
             finish();
@@ -78,7 +78,7 @@ public class SigninActivity extends AppCompatActivity {
             if (user != null) {
                 if (user.getBoolean("banned")) {
                     if (getCurrentFocus() != null) {
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
                     }
                     Snackbar.make(findViewById(R.id.signin_layout), "Sorry you're banned", Snackbar.LENGTH_LONG).show();
@@ -89,7 +89,7 @@ public class SigninActivity extends AppCompatActivity {
                 }
             } else {
                 if (getCurrentFocus() != null) {
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
                 }
                 Snackbar.make(findViewById(R.id.signin_layout), "Login Failed!", Snackbar.LENGTH_LONG).show();
@@ -101,7 +101,7 @@ public class SigninActivity extends AppCompatActivity {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (getCurrentFocus() != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
             return true;
         }

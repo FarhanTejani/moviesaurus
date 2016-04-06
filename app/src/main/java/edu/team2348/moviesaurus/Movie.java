@@ -102,8 +102,8 @@ public class Movie extends ParseObject {
      * @return the rating HashMap of users and their ratings
      */
     private Map<String, Double> fromJSON() {
-        JSONArray storeRating = getJSONArray("ratings");
-        HashMap<String, Double> map = new HashMap<>();
+        final JSONArray storeRating = getJSONArray("ratings");
+        final HashMap<String, Double> map = new HashMap<>();
         for (int i = 0; i < storeRating.length(); i++) {
             JSONObject o;
             try {
@@ -118,9 +118,9 @@ public class Movie extends ParseObject {
 
 
     private JSONArray toJSON() {
-        JSONArray array = new JSONArray();
-        for (Map.Entry<String, Double> item : rating.entrySet()) {
-            JSONObject o = new JSONObject();
+        final JSONArray array = new JSONArray();
+        for (final Map.Entry<String, Double> item : rating.entrySet()) {
+            final JSONObject o = new JSONObject();
             try {
                 o.put("user", item.getKey());
                 o.put("rating", item.getValue());
@@ -160,7 +160,7 @@ public class Movie extends ParseObject {
     public float getRating() {
         float sum = 0;
         restoreRatings();
-        for (Double d : rating.values()) {
+        for (final Double d : rating.values()) {
             sum += d;
         }
         return sum / rating.size();
@@ -179,11 +179,11 @@ public class Movie extends ParseObject {
      * @param major the list of majors to be retained
      */
     public void filterByMajor(final List<String> major) {
-        Set<String> keys = rating.keySet();
+        final Set<String> keys = rating.keySet();
         for (final String k : keys) {
-            ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
+            final ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
             try {
-                ParseUser u = query.get(k);
+                final ParseUser u = query.get(k);
                 if(!major.contains(u.getString("major"))) {
                     rating.remove(k);
                 }
@@ -218,7 +218,7 @@ public class Movie extends ParseObject {
         return new Comparator<Movie>() {
             @Override
             public int compare(Movie lhs, Movie rhs) {
-                double  r = rhs.getRating() - lhs.getRating();
+                final double  r = rhs.getRating() - lhs.getRating();
                 if (r < 0) {
                     return -1;
                 } else if (r > 0) {
@@ -235,7 +235,7 @@ public class Movie extends ParseObject {
         if (o == null) return false;
         if (o == this) return true;
         if (!(o instanceof Movie)) return false;
-        Movie other = (Movie) o;
+        final Movie other = (Movie) o;
         return title.equals(other.title) && poster.equals(other.poster) && description.equals(other.description);
     }
 

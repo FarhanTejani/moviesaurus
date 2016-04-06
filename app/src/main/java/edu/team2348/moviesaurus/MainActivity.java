@@ -69,6 +69,8 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
     private CharSequence[] titles = {"New Releases", "Recommendations", "DVD Releases"};
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,23 +98,27 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
     }
 
     private class TabInteractionListener implements TabLayout.OnTabSelectedListener {
+
+
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
+            final int full = 255;
             viewPager.setCurrentItem(tab.getPosition());
             if (getSupportActionBar() != null) {
                 getSupportActionBar().setTitle(titles[tab.getPosition()]);
             }
             if (tab.getPosition() == 1 && filter != null) {
                 filter.setEnabled(true);
-                filter.getIcon().setAlpha(255);
+                filter.getIcon().setAlpha(full);
             }
         }
 
         @Override
         public void onTabUnselected(TabLayout.Tab tab) {
+            final int dim = 130;
             if (tab.getPosition() == 1 && filter != null) {
                 filter.setEnabled(false);
-                filter.getIcon().setAlpha(130);
+                filter.getIcon().setAlpha(dim);
             }
         }
 
@@ -124,11 +130,12 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        final int dim = 130;
         final MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_options, menu);
         filter = menu.getItem(1);
         filter.setEnabled(false);
-        filter.getIcon().setAlpha(130);
+        filter.getIcon().setAlpha(dim);
         final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         final SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, MovieSearchActivity.class)));
@@ -185,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
                             final Context context = getApplicationContext();
                             final CharSequence text = e.getMessage();
                             final int duration = Toast.LENGTH_SHORT;
-                            Toast toast = Toast.makeText(context, text, duration);
+                            final Toast toast = Toast.makeText(context, text, duration);
                             toast.show();
                         }
                     }
@@ -198,9 +205,9 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
                 return true;
             case R.id.filter:
                 final ArrayList<String> mSelectedItems = new ArrayList<>();  // Where we track the selected items
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 // Set the dialog title
-                String[] preList = getResources().getStringArray(R.array.major_list);
+                final String[] preList = getResources().getStringArray(R.array.major_list);
                 Arrays.sort(preList);
                 final String[] list = preList;
                 builder.setTitle("Filter")
@@ -226,8 +233,8 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
                             public void onClick(DialogInterface dialog, int id) {
                                 // User clicked OK, so save the mSelectedItems results somewhere
                                 // or return them to the component that opened the dialog
-                                SwipeAdapter a = (SwipeAdapter) viewPager.getAdapter();
-                                MovieFragment mf = (MovieFragment) a.getRegisteredFragment(viewPager.getCurrentItem());
+                                final SwipeAdapter swipeAdapter = (SwipeAdapter) viewPager.getAdapter();
+                                final MovieFragment mf = (MovieFragment) swipeAdapter.getRegisteredFragment(viewPager.getCurrentItem());
                                 mf.filterOut(mSelectedItems);
                                 dialog.dismiss();
                             }
@@ -240,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
                         });
 
                 builder.create();
-                AlertDialog dialog = builder.create();
+                final AlertDialog dialog = builder.create();
                 dialog.show();
                 return true;
             default:
@@ -250,7 +257,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
 
     @Override
     public void onListFragmentInteraction(Movie item) {
-        Intent movieDetail = new Intent(this, MovieDetailActivity.class);
+        final Intent movieDetail = new Intent(this, MovieDetailActivity.class);
         movieDetail.putExtra("title", item.getTitle());
         movieDetail.putExtra("poster", item.getPoster());
         movieDetail.putExtra("rating", item.getRating());
