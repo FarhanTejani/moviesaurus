@@ -28,12 +28,12 @@ import java.util.Arrays;
  * @version 1.0
  */
 public class RegisterActivity extends AppCompatActivity {
-    private static String TAG = "RegisterActivity";
+//    private static String TAG = "RegisterActivity";
 
     private EditText email;
     private EditText password;
-    private Button signUp;
     private Intent intent;
+    private AppCompatSpinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final AppCompatSpinner spinner = (AppCompatSpinner) findViewById(R.id.major_spinner);
+        spinner = (AppCompatSpinner) findViewById(R.id.major_spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
         String[] preList = getResources().getStringArray(R.array.major_list);
         Arrays.sort(preList);
@@ -55,37 +55,39 @@ public class RegisterActivity extends AppCompatActivity {
 
         email = (EditText) findViewById(R.id.registration_email);
         password = (EditText) findViewById(R.id.registration_password);
-        signUp = (Button) findViewById(R.id.signup_button);
+        Button signUp = (Button) findViewById(R.id.signup_button);
         intent = new Intent(this, MainActivity.class);
 
-        signUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ParseUser user = new ParseUser();
-                user.setEmail(email.getText().toString());
-                user.setUsername(email.getText().toString());
-                user.setPassword(password.getText().toString());
-                user.put("admin", false);
-                user.put("banned", false);
-                user.put("major", spinner.getSelectedItem());
-                        user.signUpInBackground(new SignUpCallback() {
-                            @Override
-                            public void done(ParseException e) {
-                                if (e == null) {
-                                    startActivity(intent);
-                                } else {
-                                    Log.e("ParseError", e.getMessage());
-                                    if (getCurrentFocus() != null) {
-                                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                                        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-                                    }
-                                    Snackbar
-                                            .make(findViewById(R.id.register_layout), e.getMessage(), Snackbar.LENGTH_LONG).show();
-                                }
-                            }
-                        });
-            }
-        });
+        signUp.setOnClickListener(new SignUpClickHandler());
+    }
+
+    private class SignUpClickHandler implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            ParseUser user = new ParseUser();
+            user.setEmail(email.getText().toString());
+            user.setUsername(email.getText().toString());
+            user.setPassword(password.getText().toString());
+            user.put("admin", false);
+            user.put("banned", false);
+            user.put("major", spinner.getSelectedItem());
+            user.signUpInBackground(new SignUpCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e == null) {
+                        startActivity(intent);
+                    } else {
+                        Log.e("ParseError", e.getMessage());
+                        if (getCurrentFocus() != null) {
+                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                        }
+                        Snackbar
+                                .make(findViewById(R.id.register_layout), e.getMessage(), Snackbar.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
     }
     @Override
     public boolean onTouchEvent(MotionEvent event) {

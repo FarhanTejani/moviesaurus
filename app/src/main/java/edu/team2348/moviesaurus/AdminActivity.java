@@ -19,16 +19,15 @@ import java.util.List;
 
 public class AdminActivity extends AppCompatActivity {
 
-//    RecyclerView recyclerView;
-    List<String> emailList;
-    List<ParseUser> userList;
-    ListView listView;
+    private List<String> emailList;
+    private List<ParseUser> userList;
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle("Ban Users");
 
@@ -36,14 +35,14 @@ public class AdminActivity extends AppCompatActivity {
         userList = new LinkedList<>();
         emailList = new LinkedList<>();
         listView = (ListView) findViewById(R.id.admin_user_listview);
-        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        final ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereNotEqualTo("email", ParseUser.getCurrentUser().getEmail());
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> objects, ParseException e) {
                 if (e == null) {
                     userList = objects;
-                    for (ParseUser user : objects) {
+                    for (final ParseUser user : objects) {
                         emailList.add(user.getEmail());
                     }
                     setAdapter();
@@ -54,10 +53,10 @@ public class AdminActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ParseUser temp = userList.get(position);
+                final ParseUser temp = userList.get(position);
                 Log.d("ParseUser", temp.getEmail());
                 Log.d("ParseUser", String.valueOf(temp.getBoolean("banned")));
-                boolean banned = temp.getBoolean("banned");
+                final boolean banned = temp.getBoolean("banned");
                 temp.put("banned", !banned);
                 temp.saveInBackground();
             }

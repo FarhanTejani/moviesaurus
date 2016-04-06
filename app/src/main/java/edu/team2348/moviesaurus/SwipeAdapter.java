@@ -13,7 +13,7 @@ import android.util.SparseArray;
 import android.view.ViewGroup;
 
 public class SwipeAdapter extends FragmentStatePagerAdapter{
-    private static final String TAG = "SwipeAdapter";
+//    private static final String TAG = "SwipeAdapter";
 
     private int mNumOfTabs;
     private SparseArray<Fragment> registeredFragments = new SparseArray<>();

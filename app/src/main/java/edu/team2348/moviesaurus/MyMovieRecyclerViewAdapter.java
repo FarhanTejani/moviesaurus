@@ -24,7 +24,7 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecy
 
     private List<Movie> movies;
     private final OnListFragmentInteractionListener mListener;
-    private static final String TAG = "MyMovieRecyclerViewAdapter";
+//    private static final String TAG = "MyMovieRecyclerViewAdapter";
 
     /**
      * Constructor for the MovieRecyclerAdapter
@@ -57,7 +57,7 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecy
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder);
+                    mListener.onListFragmentInteraction(movies.get(position));
                 }
             }
         });
@@ -74,10 +74,10 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecy
      * @version 1.0
      */
     public class ViewHolder extends RecyclerView.ViewHolder  {
-        public final View mView;
-        public final AppCompatTextView mContentView;
-        public final AppCompatImageView poster;
-        public final AppCompatRatingBar rating;
+        private final View mView;
+        private final AppCompatTextView mContentView;
+        private final AppCompatImageView poster;
+        private final AppCompatRatingBar rating;
 
         /**
          * Constructor for creating the ViewHolder
@@ -89,14 +89,6 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecy
             rating = (AppCompatRatingBar) view.findViewById(R.id.rating);
             mContentView = (AppCompatTextView) view.findViewById(R.id.content);
             poster = (AppCompatImageView) view.findViewById(R.id.movie_poster);
-        }
-        /**
-         * Returns the url of the picture for the position
-         * @param position the position of the item in the RecyclerView
-         * @return String for the URL of the for the item number
-         */
-        String getPicUrl(int position) {
-            return movies.get(position).getPoster();
         }
 
 

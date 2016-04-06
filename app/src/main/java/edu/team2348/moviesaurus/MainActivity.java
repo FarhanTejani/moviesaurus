@@ -76,42 +76,17 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.showOverflowMenu();
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        final TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         // Setting up the TabLayout
         tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(this, R.drawable.ic_whatshot_24dp)));
         tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(this, R.drawable.ic_trending_up_24dp)));
         tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(this, R.drawable.ic_disc_full_24dp)));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         viewPager = (ViewPager) findViewById(R.id.pager);
-        PagerAdapter adapter = new SwipeAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        final PagerAdapter adapter = new SwipeAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-                if (getSupportActionBar() != null) {
-                    getSupportActionBar().setTitle(titles[tab.getPosition()]);
-                }
-                if (tab.getPosition() == 1 && filter != null) {
-                    filter.setEnabled(true);
-                    filter.getIcon().setAlpha(255);
-                }
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                if (tab.getPosition() == 1 && filter != null) {
-                    filter.setEnabled(false);
-                    filter.getIcon().setAlpha(130);
-                }
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
+        tabLayout.setOnTabSelectedListener(new TabInteractionListener());
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(titles[0]);
         }
@@ -120,24 +95,51 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
         adminIntent = new Intent(this, AdminActivity.class);
     }
 
+    private class TabInteractionListener implements TabLayout.OnTabSelectedListener {
+        @Override
+        public void onTabSelected(TabLayout.Tab tab) {
+            viewPager.setCurrentItem(tab.getPosition());
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setTitle(titles[tab.getPosition()]);
+            }
+            if (tab.getPosition() == 1 && filter != null) {
+                filter.setEnabled(true);
+                filter.getIcon().setAlpha(255);
+            }
+        }
+
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab) {
+            if (tab.getPosition() == 1 && filter != null) {
+                filter.setEnabled(false);
+                filter.getIcon().setAlpha(130);
+            }
+        }
+
+        @Override
+        public void onTabReselected(TabLayout.Tab tab) {
+
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
+        final MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_options, menu);
         filter = menu.getItem(1);
         filter.setEnabled(false);
         filter.getIcon().setAlpha(130);
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        final SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, MovieSearchActivity.class)));
         searchView.setIconifiedByDefault(false);
-        MenuItem adminControl = menu.getItem(3);
+        final MenuItem adminControl = menu.getItem(3);
         if (!ParseUser.getCurrentUser().getBoolean("admin")) {
             adminControl.setEnabled(false);
             adminControl.setVisible(false);
         }
 
-        MenuItem menuItem = menu.findItem(R.id.search);
+        final MenuItem menuItem = menu.findItem(R.id.search);
         MenuItemCompat.setOnActionExpandListener(menuItem, new MenuItemCompat.OnActionExpandListener() {
 
             @Override
@@ -145,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
                 //get focus
                 item.getActionView().requestFocus();
                 //get input method
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
                 return true;
             }
@@ -160,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (getCurrentFocus() != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
             return true;
         }
@@ -180,9 +182,9 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
                         if (e != null) {
                             //displays Parse Error in a toast
                             Log.e(TAG, e.getMessage());
-                            Context context = getApplicationContext();
-                            CharSequence text = e.getMessage();
-                            int duration = Toast.LENGTH_SHORT;
+                            final Context context = getApplicationContext();
+                            final CharSequence text = e.getMessage();
+                            final int duration = Toast.LENGTH_SHORT;
                             Toast toast = Toast.makeText(context, text, duration);
                             toast.show();
                         }
@@ -240,17 +242,18 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
                 builder.create();
                 AlertDialog dialog = builder.create();
                 dialog.show();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
     @Override
-    public void onListFragmentInteraction(MyMovieRecyclerViewAdapter.ViewHolder item) {
+    public void onListFragmentInteraction(Movie item) {
         Intent movieDetail = new Intent(this, MovieDetailActivity.class);
-        movieDetail.putExtra("title", item.mContentView.getText());
-        movieDetail.putExtra("poster", item.getPicUrl(item.getLayoutPosition()));
-        movieDetail.putExtra("rating", item.rating.getRating());
+        movieDetail.putExtra("title", item.getTitle());
+        movieDetail.putExtra("poster", item.getPoster());
+        movieDetail.putExtra("rating", item.getRating());
         startActivity(movieDetail);
 
     }

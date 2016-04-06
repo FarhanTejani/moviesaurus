@@ -51,63 +51,67 @@ public class MovieDetailActivity extends AppCompatActivity {
         myRating = getIntent().getFloatExtra("rating", 0);
         ratingBar.setRating(myRating);
 
-        rateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MovieDetailActivity.this);
-                LayoutInflater inflater = MovieDetailActivity.this.getLayoutInflater();
-                builder.setTitle("Movie Rating");
-                builder.setView(inflater.inflate(R.layout.rating_dialog, null));
-
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        ratingBar.setRating(myRating);
-                        ParseQuery<Movie> query = ParseQuery.getQuery(Movie.class);
-                        query.whereEqualTo("title", title.toString())
-                                .whereEqualTo("poster", poster)
-                                .findInBackground(new FindCallback<Movie>() {
-                                    @Override
-                                    public void done(List<Movie> objects, ParseException e) {
-                                        if (e == null) {
-                                            objects.get(0).restoreRatings();
-                                            objects.get(0).addRating(ParseUser.getCurrentUser().getObjectId(), myRating);
-                                            objects.get(0).saveInBackground(new SaveCallback() {
-                                                @Override
-                                                public void done(ParseException e) {
-                                                    if (e != null) {
-                                                        Log.e(TAG, e.getMessage());
-                                                    }
-                                                }
-                                            });
-                                        } else {
-                                            Log.e(TAG, e.getMessage());
-                                        }
-                                    }
-                                });
-                        dialog.dismiss();
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
-                AlertDialog dialog = builder.create();
-                dialog.show();
-                AppCompatRatingBar bar = (AppCompatRatingBar) dialog.findViewById(R.id.dialog_rating);
-                bar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-                    @Override
-                    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                        myRating = rating;
-
-                    }
-                });
-            }
-        });
+        rateButton.setOnClickListener( new RatingClickListener());
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(title);
         }
 
+    }
+
+    private class RatingClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MovieDetailActivity.this);
+            LayoutInflater inflater = MovieDetailActivity.this.getLayoutInflater();
+            builder.setTitle("Movie Rating");
+            builder.setView(inflater.inflate(R.layout.rating_dialog, null));
+
+            builder.setPositiveButton("OK", new PositiveClickListener());
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            AppCompatRatingBar bar = (AppCompatRatingBar) dialog.findViewById(R.id.dialog_rating);
+            bar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                @Override
+                public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                    myRating = rating;
+
+                }
+            });
+        }
+    }
+
+    private class PositiveClickListener implements DialogInterface.OnClickListener {
+        public void onClick(DialogInterface dialog, int id) {
+            ratingBar.setRating(myRating);
+            ParseQuery<Movie> query = ParseQuery.getQuery(Movie.class);
+            query.whereEqualTo("title", title.toString())
+                    .whereEqualTo("poster", poster)
+                    .findInBackground(new FindCallback<Movie>() {
+                        @Override
+                        public void done(List<Movie> objects, ParseException e) {
+                            if (e == null) {
+                                objects.get(0).restoreRatings();
+                                objects.get(0).addRating(ParseUser.getCurrentUser().getObjectId(), myRating);
+                                objects.get(0).saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        if (e != null) {
+                                            Log.e(TAG, e.getMessage());
+                                        }
+                                    }
+                                });
+                            } else {
+                                Log.e(TAG, e.getMessage());
+                            }
+                        }
+                    });
+            dialog.dismiss();
+        }
     }
 
 }

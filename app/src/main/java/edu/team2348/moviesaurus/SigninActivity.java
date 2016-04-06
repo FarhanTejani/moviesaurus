@@ -49,42 +49,7 @@ public class SigninActivity extends AppCompatActivity {
             finish();
         }
 
-        signInBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "No persistent user");
-                ParseUser.logInInBackground(
-                        email.getText().toString(),
-                        pass.getText().toString(),
-                        new LogInCallback() {
-                            @Override
-                            public void done(ParseUser user, ParseException e) {
-                                if (user != null) {
-                                    if (user.getBoolean("banned")) {
-                                        if (getCurrentFocus() != null) {
-                                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                                            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-                                        }
-                                        Snackbar.make(findViewById(R.id.signin_layout), "Sorry you're banned", Snackbar.LENGTH_LONG).show();
-                                        ParseUser.logOutInBackground();
-                                    } else {
-                                        startActivity(loggedInIntent);
-                                        finish();
-                                    }
-                                } else {
-                                    if (getCurrentFocus() != null) {
-                                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                                        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-                                    }
-                                    Snackbar.make(findViewById(R.id.signin_layout), "Login Failed!", Snackbar.LENGTH_LONG).show();
-                                    Log.e("ParseError", e.getMessage());
-                                }
-                            }
-                        }
-                );
-
-            }
-        });
+        signInBtn.setOnClickListener(new SignInHandler());
 
 
         signUpBtn.setOnClickListener(new View.OnClickListener() {
@@ -96,6 +61,43 @@ public class SigninActivity extends AppCompatActivity {
         });
 
     }
+
+    private class SignInHandler implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            Log.d(TAG, "No persistent user");
+            ParseUser.logInInBackground(email.getText().toString(), pass.getText().toString(),
+                                        new msLoginCallback());
+
+        }
+    }
+
+    private class msLoginCallback implements LogInCallback {
+        @Override
+        public void done(ParseUser user, ParseException e) {
+            if (user != null) {
+                if (user.getBoolean("banned")) {
+                    if (getCurrentFocus() != null) {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                    }
+                    Snackbar.make(findViewById(R.id.signin_layout), "Sorry you're banned", Snackbar.LENGTH_LONG).show();
+                    ParseUser.logOutInBackground();
+                } else {
+                    startActivity(loggedInIntent);
+                    finish();
+                }
+            } else {
+                if (getCurrentFocus() != null) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                }
+                Snackbar.make(findViewById(R.id.signin_layout), "Login Failed!", Snackbar.LENGTH_LONG).show();
+                Log.e("ParseError", e.getMessage());
+            }
+        }
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (getCurrentFocus() != null) {

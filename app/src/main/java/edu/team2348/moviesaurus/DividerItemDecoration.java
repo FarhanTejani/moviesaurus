@@ -27,7 +27,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
     private int mOrientation;
 
-    private static final String TAG = "DividerItemDecoration";
+//    private static final String TAG = "DividerItemDecoration";
 
 
     /**

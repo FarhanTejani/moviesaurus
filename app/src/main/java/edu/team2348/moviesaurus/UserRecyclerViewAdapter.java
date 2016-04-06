@@ -9,14 +9,13 @@ import android.widget.TextView;
 import java.util.List;
 
 /**
- * Created by faizanv on 3/18/16.
+ * Adapter for RecyclerView of Users
+ * @author Faizan Virani
  */
 public class UserRecyclerViewAdapter extends RecyclerView.Adapter {
 
-    List<String> users;
-
     public UserRecyclerViewAdapter(List<String> users) {
-        this.users = users;
+        List<String> userslist = users;
     }
 
     @Override
@@ -38,8 +37,8 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter {
 
     private class ViewHolder extends RecyclerView.ViewHolder {
 
-        public final View mView;
-        public final TextView email;
+        private final View mView;
+        private final TextView email;
 
         public ViewHolder(View itemView) {
             super(itemView);

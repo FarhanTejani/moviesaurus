@@ -41,6 +41,7 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private static final String URL_ARG = "url";
     private static final String SORT = "sort";
     private static final String TAG = "MovieFragment";
+    private static final String titleLit = "title";
 
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
@@ -163,65 +164,82 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
      */
     private void callRottenTomatoes() {
         AsyncHttpClient client = new AsyncHttpClient();
-        client.get(url, new JsonHttpResponseHandler() {
+        client.get(url, new rtHTTPResponseHandler());
+    }
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                JSONArray movies;
-                try {
-                    movies = response.getJSONArray("movies");
-                    mList.clear();
-                    for (int i = 0; i < movies.length(); i++) {
-                        mList.add(null);
-                    }
-                    final ArrayList<String> tList = new ArrayList<>();
-                    for (int i = 0; i < movies.length(); i++) {
-                        JSONObject cur = movies.getJSONObject(i);
-                        final String title = cur.getString("title");
-                        tList.add(title);
-                        final String synop = cur.getString("synopsis");
-                        final String poster = cur.getJSONObject("posters").getString("original");
-                        ParseQuery<Movie> query = ParseQuery.getQuery(Movie.class);
-                        query.whereEqualTo("title", cur.getString("title"))
-                                .whereEqualTo("description", cur.getString("synopsis"))
-                                .findInBackground(new FindCallback<Movie>() {
-                                    @Override
-                                    public void done(List<Movie> objects, ParseException e) {
-                                        if (e == null) {
-                                            if (objects.size() == 0) {
-                                                Movie ele = new Movie(title, synop, poster);
-                                                ele.saveInBackground(new SaveCallback() {
-                                                    @Override
-                                                    public void done(ParseException e) {
-                                                        if (e != null) {
-                                                            Log.e(TAG, e.getMessage());
-                                                        }
-                                                    }
-                                                });
-                                                mList.set(tList.indexOf(title), ele);
-                                            } else {
-                                                Movie m = objects.get(0);
-                                                m.setTitle(m.getString("title"));
-                                                m.setPoster(m.getString("poster"));
-                                                m.setDescription(m.getString("description"));
-                                                m.setRated(m.getBoolean("rated"));
-                                                mList.set(tList.indexOf(title), m);
-                                            }
-                                            mAdapter.notifyDataSetChanged();
-                                        } else {
-                                            Log.e("MovieFrag", e.getMessage());
-                                        }
+    private class rtHTTPResponseHandler extends JsonHttpResponseHandler {
 
-                                    }
-                                });
-                    }
-
-                } catch (JSONException e) {
-                    Log.e(TAG, e.getMessage());
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+            super.onSuccess(statusCode, headers, response);
+            JSONArray movies;
+            try {
+                movies = response.getJSONArray("movies");
+                mList.clear();
+                for (int i = 0; i < movies.length(); i++) {
+                    mList.add(null);
                 }
+                final ArrayList<String> tList = new ArrayList<>();
+                for (int i = 0; i < movies.length(); i++) {
+                    JSONObject cur = movies.getJSONObject(i);
+                    final String title = cur.getString(titleLit);
+                    tList.add(title);
+                    final String synop = cur.getString("synopsis");
+                    final String poster = cur.getJSONObject("posters").getString("original");
+                    ParseQuery<Movie> query = ParseQuery.getQuery(Movie.class);
+                    query.whereEqualTo(titleLit, cur.getString(titleLit))
+                            .whereEqualTo("description", cur.getString("synopsis"))
+                            .findInBackground(new FoundMovieCallback(title, synop, poster, tList));
+                }
+
+            } catch (JSONException e) {
+                Log.e(TAG, e.getMessage());
             }
-        });
+        }
+    }
+
+    private class FoundMovieCallback implements FindCallback<Movie> {
+
+        private final String title;
+        private final String synopsis;
+        private final String poster;
+        private final List<String> tList;
+
+        private FoundMovieCallback(String title, String synopsis, String poster, List<String> tList) {
+            this.title = title;
+            this.synopsis = synopsis;
+            this.poster = poster;
+            this.tList = tList;
+        }
+
+        @Override
+        public void done(List<Movie> objects, ParseException e) {
+            if (e == null) {
+                if (objects.size() == 0) {
+                    Movie ele = new Movie(title, synopsis, poster);
+                    ele.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e != null) {
+                                Log.e(TAG, e.getMessage());
+                            }
+                        }
+                    });
+                    mList.set(tList.indexOf(title), ele);
+                } else {
+                    Movie m = objects.get(0);
+                    m.setTitle(m.getString(titleLit));
+                    m.setPoster(m.getString("poster"));
+                    m.setDescription(m.getString("description"));
+                    m.setRated(m.getBoolean("rated"));
+                    mList.set(tList.indexOf(title), m);
+                }
+                mAdapter.notifyDataSetChanged();
+            } else {
+                Log.e("MovieFrag", e.getMessage());
+            }
+
+        }
     }
 
     /**
@@ -247,8 +265,14 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
+            throw new ImplementInteractionException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
+        }
+    }
+
+    private class ImplementInteractionException extends RuntimeException {
+        public ImplementInteractionException(String message) {
+            super(message);
         }
     }
 
@@ -265,6 +289,6 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
      * activity.
      */
     public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(MyMovieRecyclerViewAdapter.ViewHolder item);
+        void onListFragmentInteraction(Movie item);
     }
 }
