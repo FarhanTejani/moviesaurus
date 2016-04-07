@@ -79,7 +79,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             final AppCompatRatingBar bar = (AppCompatRatingBar) dialog.findViewById(R.id.dialog_rating);
             bar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
                 @Override
-                public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                public void onRatingChanged(RatingBar pRatingBar, float rating, boolean fromUser) {
                     myRating = rating;
 
                 }
@@ -87,7 +87,12 @@ public class MovieDetailActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Class to handle when a user clicks the OK button in the dialog
+     */
     private class PositiveClickListener implements DialogInterface.OnClickListener {
+
+        @Override
         public void onClick(DialogInterface dialog, int id) {
             ratingBar.setRating(myRating);
             final ParseQuery<Movie> query = ParseQuery.getQuery(Movie.class);

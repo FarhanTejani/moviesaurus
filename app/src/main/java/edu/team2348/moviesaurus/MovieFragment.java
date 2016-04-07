@@ -167,6 +167,71 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         client.get(url, new rtHTTPResponseHandler());
     }
 
+    /**
+     * Method to filter movies by retaining the majors in parameter list
+     * @param majors the list of majors to retain
+     */
+    public void filterOut(List<String> majors) {
+        swipeLayout.setRefreshing(true);
+        for (int i = 0; i < mList.size(); i++) {
+            mList.get(i).filterByMajor(majors);
+            if (!mList.get(i).isRated()) {
+                mList.remove(i--);
+            }
+        }
+        mAdapter.notifyDataSetChanged();
+        swipeLayout.setRefreshing(false);
+
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnListFragmentInteractionListener) {
+            mListener = (OnListFragmentInteractionListener) context;
+        } else {
+            throw new ImplementInteractionException(context.toString()
+                    + " must implement OnListFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     */
+    public interface OnListFragmentInteractionListener {
+        /**
+         * Method that specifies actions taken when user interacts with the fragment
+         * @param item the Movie that was touched
+         */
+        void onListFragmentInteraction(Movie item);
+    }
+
+    /**
+     * Exception thrown when class doesn't implement the interaction listener
+     */
+    private class ImplementInteractionException extends RuntimeException {
+
+        /**
+         * The constructor for the exception that takes in a String message
+         * @param message the exception message
+         */
+        public ImplementInteractionException(String message) {
+            super(message);
+        }
+    }
+
+    /**
+     * Class that handles respons from Rotten Tomatoes JSON response
+     */
     private class rtHTTPResponseHandler extends JsonHttpResponseHandler {
 
         @Override
@@ -198,18 +263,28 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         }
     }
 
-    private class FoundMovieCallback implements FindCallback<Movie> {
+    /**
+     * Class that handles when movies are found from a Parse query
+     */
+    private final class FoundMovieCallback implements FindCallback<Movie> {
 
         private final String title;
         private final String synopsis;
         private final String poster;
         private final List<String> tList;
 
-        private FoundMovieCallback(String title, String synopsis, String poster, List<String> tList) {
-            this.title = title;
-            this.synopsis = synopsis;
-            this.poster = poster;
-            this.tList = tList;
+        /**
+         * Constructor for FoundMovieCallback that takes in all parameters
+         * @param pTitle the title of the movie
+         * @param pSynopsis the synopsis of the movie
+         * @param pPoster the poster url of the movie
+         * @param pTList the list of movie titles in order
+         */
+        private FoundMovieCallback(String pTitle, String pSynopsis, String pPoster, List<String> pTList) {
+            this.title = pTitle;
+            this.synopsis = pSynopsis;
+            this.poster = pPoster;
+            this.tList = pTList;
         }
 
         @Override
@@ -242,53 +317,4 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         }
     }
 
-    /**
-     * Method to filter movies by retaining the majors in parameter list
-     * @param majors the list of majors to retain
-     */
-    public void filterOut(List<String> majors) {
-        swipeLayout.setRefreshing(true);
-        for (int i = 0; i < mList.size(); i++) {
-            mList.get(i).filterByMajor(majors);
-            if (!mList.get(i).isRated()) {
-                mList.remove(i--);
-            }
-        }
-        mAdapter.notifyDataSetChanged();
-        swipeLayout.setRefreshing(false);
-
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
-        } else {
-            throw new ImplementInteractionException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
-        }
-    }
-
-    private class ImplementInteractionException extends RuntimeException {
-        public ImplementInteractionException(String message) {
-            super(message);
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     */
-    public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(Movie item);
-    }
 }

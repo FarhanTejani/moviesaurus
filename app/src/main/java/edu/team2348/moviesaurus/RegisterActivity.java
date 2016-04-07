@@ -61,6 +61,16 @@ public class RegisterActivity extends AppCompatActivity {
         signUp.setOnClickListener(new SignUpClickHandler());
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (getCurrentFocus() != null) {
+            final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            return true;
+        }
+        return false;
+    }
+
     private class SignUpClickHandler implements View.OnClickListener {
         @Override
         public void onClick(View v) {
@@ -88,15 +98,6 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             });
         }
-    }
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (getCurrentFocus() != null) {
-            final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-            return true;
-        }
-        return false;
     }
 
 }

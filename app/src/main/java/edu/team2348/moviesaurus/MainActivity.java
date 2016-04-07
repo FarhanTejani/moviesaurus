@@ -97,37 +97,6 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
         adminIntent = new Intent(this, AdminActivity.class);
     }
 
-    private class TabInteractionListener implements TabLayout.OnTabSelectedListener {
-
-
-        @Override
-        public void onTabSelected(TabLayout.Tab tab) {
-            final int full = 255;
-            viewPager.setCurrentItem(tab.getPosition());
-            if (getSupportActionBar() != null) {
-                getSupportActionBar().setTitle(titles[tab.getPosition()]);
-            }
-            if (tab.getPosition() == 1 && filter != null) {
-                filter.setEnabled(true);
-                filter.getIcon().setAlpha(full);
-            }
-        }
-
-        @Override
-        public void onTabUnselected(TabLayout.Tab tab) {
-            final int dim = 130;
-            if (tab.getPosition() == 1 && filter != null) {
-                filter.setEnabled(false);
-                filter.getIcon().setAlpha(dim);
-            }
-        }
-
-        @Override
-        public void onTabReselected(TabLayout.Tab tab) {
-
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         final int dim = 130;
@@ -263,5 +232,35 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
         movieDetail.putExtra("rating", item.getRating());
         startActivity(movieDetail);
 
+    }
+
+    private class TabInteractionListener implements TabLayout.OnTabSelectedListener {
+
+        @Override
+        public void onTabSelected(TabLayout.Tab tab) {
+            final int full = 255;
+            viewPager.setCurrentItem(tab.getPosition());
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setTitle(titles[tab.getPosition()]);
+            }
+            if (tab.getPosition() == 1 && filter != null) {
+                filter.setEnabled(true);
+                filter.getIcon().setAlpha(full);
+            }
+        }
+
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab) {
+            final int dim = 130;
+            if (tab.getPosition() == 1 && filter != null) {
+                filter.setEnabled(false);
+                filter.getIcon().setAlpha(dim);
+            }
+        }
+
+        @Override
+        public void onTabReselected(TabLayout.Tab tab) {
+
+        }
     }
 }

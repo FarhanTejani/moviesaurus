@@ -28,11 +28,11 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecy
 
     /**
      * Constructor for the MovieRecyclerAdapter
-     * @param movies the list of movies to be put in the RecyclerView
+     * @param pMovies the list of movies to be put in the RecyclerView
      * @param listener the interaction listener between the fragment
      */
-    public MyMovieRecyclerViewAdapter(List<Movie> movies, OnListFragmentInteractionListener listener) {
-        this.movies = movies;
+    public MyMovieRecyclerViewAdapter(List<Movie> pMovies, OnListFragmentInteractionListener listener) {
+        this.movies = pMovies;
         mListener = listener;
 
     }

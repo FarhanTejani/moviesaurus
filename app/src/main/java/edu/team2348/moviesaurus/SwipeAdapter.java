@@ -18,9 +18,14 @@ public class SwipeAdapter extends FragmentStatePagerAdapter{
     private int mNumOfTabs;
     private SparseArray<Fragment> registeredFragments = new SparseArray<>();
 
-    public SwipeAdapter(FragmentManager fm, int NumOfTabs) {
+    /**
+     * Constructor for the SwipeAdapter with parameters
+     * @param fm the fragment manager
+     * @param numOfTabs number of tabs being used
+     */
+    public SwipeAdapter(FragmentManager fm, int numOfTabs) {
         super(fm);
-        this.mNumOfTabs = NumOfTabs;
+        this.mNumOfTabs = numOfTabs;
 
     }
 
@@ -55,6 +60,11 @@ public class SwipeAdapter extends FragmentStatePagerAdapter{
         super.destroyItem(container, position, object);
     }
 
+    /**
+     * Gets the reference to the fragment that are currently created given a position
+     * @param position the index of the tab
+     * @return the fragment reference at the position requested
+     */
     public Fragment getRegisteredFragment(int position) {
         return registeredFragments.get(position);
     }

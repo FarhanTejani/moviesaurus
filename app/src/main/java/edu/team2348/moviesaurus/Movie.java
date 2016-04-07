@@ -40,12 +40,18 @@ public class Movie extends ParseObject {
 
     }
 
-    public Movie(String title, String description, String poster) {
-        this.title = title;
+    /**
+     * Contructor for Movie with all parameters
+     * @param pTitle The title of the movie
+     * @param pDescription The description of the movie
+     * @param pPoster The url of the movie's poster
+     */
+    public Movie(String pTitle, String pDescription, String pPoster) {
+        this.title = pTitle;
         put("title", this.title);
-        this.description = description;
+        this.description = pDescription;
         put("description", this.description);
-        this.poster = poster;
+        this.poster = pPoster;
         put("poster", this.poster);
         put("rated", rated);
         rating = new HashMap<>();
@@ -63,36 +69,40 @@ public class Movie extends ParseObject {
 
     /**
      * Sets the whether the Movie is rated or not
-     * @param rated the status of whether the movie is rated or not
+     * @param pRated the status of whether the movie is rated or not
      */
-    public void setRated(boolean rated) {
-        this.rated = rated;
+    public void setRated(boolean pRated) {
+        this.rated = pRated;
     }
 
     /**
      * Sets the title of the Movie
-     * @param title the title of the Movie
+     * @param pTitle the title of the Movie
      */
-    public void setTitle(String title) {
-        this.title = title;
+    public void setTitle(String pTitle) {
+        this.title = pTitle;
     }
 
     /**
      * Sets the poser url of the Movie
-     * @param poster the url of the Movie poster
+     * @param pPoster the url of the Movie poster
      */
-    public void setPoster(String poster) {
-        this.poster = poster;
+    public void setPoster(String pPoster) {
+        this.poster = pPoster;
     }
 
     /**
      * Sets the description of the Movie
-     * @param description the description (synopsis) of the movie
+     * @param pDescription the description (synopsis) of the movie
      */
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescription(String pDescription) {
+        this.description = pDescription;
     }
 
+    /**
+     * Gets the current rating map
+     * @return the rating map
+     */
     public Map<String, Double> getRatingMap() {
         return rating;
     }
@@ -116,7 +126,10 @@ public class Movie extends ParseObject {
         return map;
     }
 
-
+    /**
+     * Converts the Map of strings to doubles to the
+     * @return the JSONArray representation of the Map
+     */
     private JSONArray toJSON() {
         final JSONArray array = new JSONArray();
         for (final Map.Entry<String, Double> item : rating.entrySet()) {
@@ -232,9 +245,15 @@ public class Movie extends ParseObject {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null) return false;
-        if (o == this) return true;
-        if (!(o instanceof Movie)) return false;
+        if (o == null) {
+            return false;
+        }
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof Movie)) {
+            return false;
+        }
         final Movie other = (Movie) o;
         return title.equals(other.title) && poster.equals(other.poster) && description.equals(other.description);
     }

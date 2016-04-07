@@ -63,6 +63,9 @@ public class AdminActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Method to set the ListView's data adapter
+     */
     private void setAdapter() {
         listView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, emailList));
     }
