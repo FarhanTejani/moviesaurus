@@ -13,17 +13,32 @@ import android.view.View;
  * @author Thomas
  * @version 1.0
  */
-public class DividerItemDecoration extends RecyclerView.ItemDecoration {
+class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
+    /**
+     * int array for list divider attributes
+     */
     private static final int[] ATTRS = new int[] {android.R.attr.listDivider};
 
-    public static final int HORIZONTAL_LIST = LinearLayoutManager.HORIZONTAL;
+    /**
+     * Horizontal linear layout manager
+     */
+    private static final int HORIZONTAL_LIST = LinearLayoutManager.HORIZONTAL;
 
-    public static final int VERTICAL_LIST = LinearLayoutManager.VERTICAL;
+    /**
+     * Vertical linear layout manager
+     */
+    static final int VERTICAL_LIST = LinearLayoutManager.VERTICAL;
 
-    private Drawable mDivider;
+    /**
+     * The drawable object for the divider
+     */
+    private final Drawable mDivider;
 
-    private int mOrientation;
+    /**
+     * the int representing the orientation
+     */
+    private int mOrientation = LinearLayoutManager.VERTICAL;
 
 //    private static final String TAG = "DividerItemDecoration";
 
@@ -44,7 +59,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
      * Set orientation of the dividing lines
      * @param orientation int representing vertical or horizontal
      */
-    public void setOrientation(int orientation) {
+    private void setOrientation(int orientation) {
         if (orientation != HORIZONTAL_LIST && orientation != VERTICAL_LIST) {
             throw new IllegalArgumentException("invalid orientation");
         }
@@ -65,7 +80,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
      * @param c the Canvas that will be drawn onto
      * @param parent the RecyclerView containing the items
      */
-    public void drawVertical(Canvas c, RecyclerView parent) {
+    private void drawVertical(Canvas c, RecyclerView parent) {
         final int left = parent.getPaddingLeft();
         final int right = parent.getWidth() - parent.getPaddingRight();
         final int childCount = parent.getChildCount();
@@ -85,7 +100,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
      * @param c the Canvas that will be drawn onto
      * @param parent RecyclerView Containing the items
      */
-    public void drawHorizontal(Canvas c, RecyclerView parent) {
+    private void drawHorizontal(Canvas c, RecyclerView parent) {
         final int top = parent.getPaddingTop();
         final int bottom = parent.getHeight() - parent.getPaddingBottom();
         final int childCount = parent.getChildCount();

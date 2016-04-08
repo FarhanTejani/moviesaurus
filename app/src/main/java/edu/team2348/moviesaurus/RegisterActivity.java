@@ -29,10 +29,21 @@ import java.util.Arrays;
  */
 public class RegisterActivity extends AppCompatActivity {
 //    private static String TAG = "RegisterActivity";
-
+    /**
+     * The EditText for the user to input his/her email
+     */
     private EditText email;
+    /**
+     * The EditText for the user ot input his/her password
+     */
     private EditText password;
+    /**
+     * The intent to start the MainActivity
+     */
     private Intent intent;
+    /**
+     * The spinner to allow users to choose their major
+     */
     private AppCompatSpinner spinner;
 
     @Override

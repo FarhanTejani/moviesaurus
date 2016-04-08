@@ -23,11 +23,25 @@ import com.parse.ParseUser;
  * @version 1.0
  */
 public class SigninActivity extends AppCompatActivity {
+    /**
+     * The TAG to identify this class to the logger
+     */
     private static final String TAG = "SigninActivity";
-
+    /**
+     * The TextInputEditText for a user to input his/her email to login
+     */
     private TextInputEditText email;
+    /**
+     * The TextInputEditText for a user to input his/her password to login
+     */
     private TextInputEditText pass;
+    /**
+     * The intent to start the MainActivity
+     */
     private Intent loggedInIntent;
+    /**
+     * The intent to start the SignInActivity
+     */
     private Intent signUpIntent;
 
     @Override

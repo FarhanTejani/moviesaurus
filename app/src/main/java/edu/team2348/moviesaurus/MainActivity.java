@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
     /**
      * The titles of the each tab in order
      */
-    private CharSequence[] titles = {"New Releases", "Recommendations", "DVD Releases"};
+    private final CharSequence[] titles = {"New Releases", "Recommendations", "DVD Releases"};
 
 
 
@@ -176,9 +176,9 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnL
                 final ArrayList<String> mSelectedItems = new ArrayList<>();  // Where we track the selected items
                 final AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 // Set the dialog title
-                final String[] preList = getResources().getStringArray(R.array.major_list);
-                Arrays.sort(preList);
-                final String[] list = preList;
+                final String[] list = getResources().getStringArray(R.array.major_list);
+                Arrays.sort(list);
+//                final String[] list = preList;
                 builder.setTitle("Filter")
                         // Specify the list array, the items to be selected by default (null for none),
                         // and the listener through which to receive callbacks when items are selected

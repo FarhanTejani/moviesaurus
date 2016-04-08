@@ -24,13 +24,36 @@ import java.util.Set;
  * @version 1.0
  */
 @ParseClassName("Movie")
-public class Movie extends ParseObject {
+class Movie extends ParseObject {
+
+    /**
+     * TAG to identify this class in the logger
+     */
     private static final String TAG = "Movie";
 
+    /**
+     * The title of the movie
+     */
     private String title;
+
+    /**
+     * Map that associates ParseUser ids to rating doubles
+     */
     private Map<String, Double> rating;
+
+    /**
+     * The description of the movie
+     */
     private String description;
+
+    /**
+     * The url for the movie poster
+     */
     private String poster;
+
+    /**
+     * boolean to tell whether the movie has been rated or not
+     */
     private boolean rated;
 
     /**
@@ -41,7 +64,7 @@ public class Movie extends ParseObject {
     }
 
     /**
-     * Contructor for Movie with all parameters
+     * Constructor for Movie with all parameters
      * @param pTitle The title of the movie
      * @param pDescription The description of the movie
      * @param pPoster The url of the movie's poster
@@ -97,14 +120,6 @@ public class Movie extends ParseObject {
      */
     public void setDescription(String pDescription) {
         this.description = pDescription;
-    }
-
-    /**
-     * Gets the current rating map
-     * @return the rating map
-     */
-    public Map<String, Double> getRatingMap() {
-        return rating;
     }
 
     /**
@@ -214,14 +229,6 @@ public class Movie extends ParseObject {
         rating = fromJSON();
     }
 
-
-    /**
-     * Method to get the description (synopsis) of the Movie
-     * @return the description of the Movie
-     */
-    public String getDescription() {
-        return description;
-    }
 
     /**
      * Method to get a comparator that will sort movies in descending order

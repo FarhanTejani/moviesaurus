@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -38,17 +37,45 @@ import cz.msebera.android.httpclient.Header;
  */
 public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
+    /**
+     * The url literal to be used to add to the intent
+     */
     private static final String URL_ARG = "url";
+    /**
+     * The sort literal to be used to add a sorting method to the intent
+     */
     private static final String SORT = "sort";
+    /**
+     * The tag variable to be used by the Logger in case of an error
+     */
     private static final String TAG = "MovieFragment";
+    /**
+     * The title literal which is used several times
+     */
     private static final String TITLE = "title";
-
-    private int mColumnCount = 1;
+    /**
+     * The listener for interactions between the fragment and the activity
+     */
     private OnListFragmentInteractionListener mListener;
+    /**
+     * The url being queried by the. Could be REST call or recommendations
+     */
     private String url;
+    /**
+     * The list of movies displayed in the fragment
+     */
     private List<Movie> mList;
+    /**
+     * The adapter for viewing Movie objects in a RecyclerView
+     */
     private MyMovieRecyclerViewAdapter mAdapter;
+    /**
+     * The Comparator that compares two movies
+     */
     private Comparator<Movie> movieComparator;
+    /**
+     * The layout that allows for swiping down to refresh the RecyclerView with data
+     */
     private SwipeRefreshLayout swipeLayout;
 
     /**
@@ -61,7 +88,7 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     /**
      * Static factory method that returns an instance of MovieFragment
      * @param url the REST call to be called
-     * @param sort how the RecylerView should sort the items
+     * @param sort how the RecyclerView should sort the items
      * @return the instance of MovieFragment
      */
     @SuppressWarnings("unused")
@@ -105,12 +132,7 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         final Context context = view.getContext();
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.movie_list);
-        if (mColumnCount <= 1) {
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        } else {
-            recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-        }
-
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
         mAdapter = new MyMovieRecyclerViewAdapter(mList, mListener);
         recyclerView.setAdapter(mAdapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST));
@@ -230,7 +252,7 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     }
 
     /**
-     * Class that handles respons from Rotten Tomatoes JSON response
+     * Class that handles response from Rotten Tomatoes JSON response
      */
     private class rtHTTPResponseHandler extends JsonHttpResponseHandler {
 
@@ -249,12 +271,12 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     final JSONObject cur = movies.getJSONObject(i);
                     final String title = cur.getString(TITLE);
                     tList.add(title);
-                    final String synop = cur.getString("synopsis");
+                    final String synopsis = cur.getString("synopsis");
                     final String poster = cur.getJSONObject("posters").getString("original");
                     final ParseQuery<Movie> query = ParseQuery.getQuery(Movie.class);
                     query.whereEqualTo(TITLE, cur.getString(TITLE))
                             .whereEqualTo("description", cur.getString("synopsis"))
-                            .findInBackground(new FoundMovieCallback(title, synop, poster, tList));
+                            .findInBackground(new FoundMovieCallback(title, synopsis, poster, tList));
                 }
 
             } catch (JSONException e) {
@@ -267,10 +289,21 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
      * Class that handles when movies are found from a Parse query
      */
     private final class FoundMovieCallback implements FindCallback<Movie> {
-
+        /**
+         * The title of the movie
+         */
         private final String title;
+        /**
+         * The synopsis of the movie
+         */
         private final String synopsis;
+        /**
+         * The url of the poster for the movie
+         */
         private final String poster;
+        /**
+         * The url of the
+         */
         private final List<String> tList;
 
         /**

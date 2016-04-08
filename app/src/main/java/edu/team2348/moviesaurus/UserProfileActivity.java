@@ -28,9 +28,14 @@ import java.util.Arrays;
  */
 
 public class UserProfileActivity extends AppCompatActivity {
+    /**
+     * The TAG to identify the this class to the Logger
+     */
     private static final String TAG = "UserProfileActivity";
-
-    private ParseUser user = ParseUser.getCurrentUser();
+    /**
+     * The Parse account currently logged into the app
+     */
+    private final ParseUser user = ParseUser.getCurrentUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

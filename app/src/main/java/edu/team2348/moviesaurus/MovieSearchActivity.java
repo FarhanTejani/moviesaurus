@@ -29,10 +29,17 @@ import cz.msebera.android.httpclient.Header;
  * @version 1.0
  */
 public class MovieSearchActivity extends AppCompatActivity implements MovieFragment.OnListFragmentInteractionListener {
+    /**
+     * The TAG to identify this Activity in the logger
+     */
     private static final String TAG = "MovieSearchActivity";
-
+    /**
+     * The list of movies being shown to the user
+     */
     private List<Movie> movieList;
-    private String url = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?apikey=yedukp76ffytfuy24zsqk7f5&q=";
+    /**
+     * The the RecyclerAdapter to show the movies that were queried
+     */
     private MyMovieRecyclerViewAdapter mAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +73,7 @@ public class MovieSearchActivity extends AppCompatActivity implements MovieFragm
             final AsyncHttpClient client = new AsyncHttpClient();
             movieList = new ArrayList<>();
             final RecyclerView view = (RecyclerView) findViewById(R.id.fragment_container);
+            final String url = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?apikey=yedukp76ffytfuy24zsqk7f5&q=";
             client.get(url + query.replace(" ", "+"), new JsonHttpResponseHandler() {
 
                 @Override

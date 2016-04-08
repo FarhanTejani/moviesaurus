@@ -28,11 +28,30 @@ import java.util.List;
  * @version 1.0
  */
 public class MovieDetailActivity extends AppCompatActivity {
+
+    /**
+     * The String TAG for the Logger if there is an error or exception
+     */
     private static final String TAG = "MovieDetailActivity";
 
+    /**
+     * The rating bar of the movie being shown
+     */
     private AppCompatRatingBar ratingBar;
+
+    /**
+     * The url of the poster image for the movie being shown
+     */
     private String poster;
+
+    /**
+     * The title of the movie
+     */
     private CharSequence title;
+
+    /**
+     * The rating of the movie
+     */
     private float myRating;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

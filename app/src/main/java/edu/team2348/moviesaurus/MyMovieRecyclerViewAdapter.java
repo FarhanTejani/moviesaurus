@@ -22,7 +22,13 @@ import edu.team2348.moviesaurus.MovieFragment.OnListFragmentInteractionListener;
  */
 public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecyclerViewAdapter.ViewHolder> {
 
-    private List<Movie> movies;
+    /**
+     * The list of movies that will be displayed to the user
+     */
+    private final List<Movie> movies;
+    /**
+     * The lister for interactions between the fragment and the Activity
+     */
     private final OnListFragmentInteractionListener mListener;
 //    private static final String TAG = "MyMovieRecyclerViewAdapter";
 
@@ -76,9 +82,21 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecy
      * @version 1.0
      */
     public class ViewHolder extends RecyclerView.ViewHolder  {
+        /**
+         * The view of a single movie
+         */
         private final View mView;
+        /**
+         * The view of the synopsis information
+         */
         private final AppCompatTextView mContentView;
+        /**
+         * The poster of the movie instance
+         */
         private final AppCompatImageView poster;
+        /**
+         * The star rating of the movie
+         */
         private final AppCompatRatingBar rating;
 
         /**

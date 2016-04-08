@@ -19,8 +19,19 @@ import java.util.List;
 
 public class AdminActivity extends AppCompatActivity {
 
+    /**
+     * List of user's emails
+     */
     private List<String> emailList;
+
+    /**
+     * List of User objects
+     */
     private List<ParseUser> userList;
+
+    /**
+     * ListView to display users
+     */
     private ListView listView;
 
     @Override
