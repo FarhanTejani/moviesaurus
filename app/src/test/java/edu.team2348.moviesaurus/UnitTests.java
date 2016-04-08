@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.ArrayList;
 import java.lang.Integer;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -21,6 +22,8 @@ import dalvik.annotation.TestTargetClass;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -52,6 +55,37 @@ public class UnitTests {
             actual.put(user, rating);
         }
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getRatingTest() {
+        ParseObject.registerSubclass(Movie.class);
+
+        Movie theDarkKnight = new Movie("The Dark Knight", "A dark movie", "www.google.com");
+        theDarkKnight.addRating("TestWeb", 5);
+        assertTrue(theDarkKnight.getRating() == 5);
+        theDarkKnight.addRating("TestWeb", 4);
+        assertFalse(theDarkKnight.getRating() == 4.5);
+    }
+
+    @Test (expected = RuntimeException.class)
+    public void getRatingRestoredTest() {
+        ParseObject.registerSubclass(Movie.class);
+        Movie deadpool = new Movie("Deadpool", "A romcom", "www.google.com");
+        deadpool.addRating("TestWeb", 5);
+        ArrayList<String> majors = new ArrayList<>();
+        deadpool.setRatingRestored(false);
+        assertTrue(deadpool.getRating() == 5);
+    }
+
+    @Test
+    public void modeTest() {
+        Map<String, Double> testData = new HashMap<>();
+        testData.put("Thomas", 4.0);
+        testData.put("Carina", 4.0);
+        testData.put("Angie", 3.0);
+        testData.put("Farhan", 2.0);
+        assertTrue(Movie.getHighestOccuringRating(testData) == 4.0);
     }
 
     @Test

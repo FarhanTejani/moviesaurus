@@ -195,7 +195,8 @@ class Movie extends ParseObject {
     public float getRating() {
         float sum = 0;
         if (!ratingRestored) {
-            restoreRatings();
+            //restoreRatings();
+            throw new RuntimeException();
         }
         for (final Double d : rating.values()) {
             sum += d;
@@ -286,6 +287,40 @@ class Movie extends ParseObject {
     public String toString() {
         return title;
     }
+
+    /**
+     * setter method to set rating restored variable
+     * @param b the boolean value to be set
+     */
+    public void setRatingRestored(boolean b) {
+        this.ratingRestored = b;
+    }
+
+    /**
+     * Method to get the highest occuring rating of any Movie's rating map
+     * @param fakeRatings the map of the movie being queried
+     * @return the number of the highest rating
+     */
+    public static double getHighestOccuringRating(Map<String, Double> fakeRatings) {
+        Map<Double, Integer> map = new HashMap<>();
+        for (final Double d : fakeRatings.values()) {
+            if (map.containsKey(d)) {
+                map.put(d, map.get(d) + 1);
+            } else {
+                map.put(d, 1);
+            }
+        }
+        int max = 0;
+        double retVal = 0;
+        for (Double i : map.keySet()) {
+            if (map.get(i) > max) {
+                retVal = i;
+                max = map.get(i);
+            }
+        }
+        return retVal;
+    }
+
 
 
 
