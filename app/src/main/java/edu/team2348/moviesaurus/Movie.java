@@ -57,6 +57,11 @@ class Movie extends ParseObject {
     private boolean rated;
 
     /**
+     * boolean to decided whether to update the restore the rating or not
+     */
+    private boolean ratingRestored;
+
+    /**
      * Default Movie constructor necessary for ParseObject
      */
     public Movie() {
@@ -154,7 +159,7 @@ class Movie extends ParseObject {
                 o.put("rating", item.getValue());
                 array.put(o);
             } catch (JSONException e) {
-                Log.e(getClass().getSimpleName(), e.getMessage());
+                Log.e(TAG, e.getMessage());
             }
         }
         return array;
@@ -174,7 +179,9 @@ class Movie extends ParseObject {
      * @param score The rating (max of 5) of the movie
      */
     public void addRating(String user, double score) {
-        restoreRatings();
+        if (!ratingRestored) {
+            restoreRatings();
+        }
         rating.put(user, score);
         rated = true;
         put("ratings", toJSON());
@@ -187,7 +194,9 @@ class Movie extends ParseObject {
      */
     public float getRating() {
         float sum = 0;
-        restoreRatings();
+        if (!ratingRestored) {
+            restoreRatings();
+        }
         for (final Double d : rating.values()) {
             sum += d;
         }
@@ -207,6 +216,7 @@ class Movie extends ParseObject {
      * @param major the list of majors to be retained
      */
     public void filterByMajor(final List<String> major) {
+        ratingRestored = false;
         final Set<String> keys = rating.keySet();
         for (final String k : keys) {
             final ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
@@ -227,6 +237,7 @@ class Movie extends ParseObject {
      */
     public void restoreRatings() {
         rating = fromJSON();
+        ratingRestored = true;
     }
 
 

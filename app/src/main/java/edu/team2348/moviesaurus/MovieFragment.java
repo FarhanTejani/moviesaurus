@@ -135,7 +135,7 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         mAdapter = new MyMovieRecyclerViewAdapter(mList, mListener);
         recyclerView.setAdapter(mAdapter);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
         return view;
     }
 

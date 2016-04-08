@@ -28,7 +28,7 @@ class DividerItemDecoration extends RecyclerView.ItemDecoration {
     /**
      * Vertical linear layout manager
      */
-    static final int VERTICAL_LIST = LinearLayoutManager.VERTICAL;
+    private static final int VERTICAL_LIST = LinearLayoutManager.VERTICAL;
 
     /**
      * The drawable object for the divider

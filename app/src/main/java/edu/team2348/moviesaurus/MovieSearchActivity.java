@@ -100,7 +100,7 @@ public class MovieSearchActivity extends AppCompatActivity implements MovieFragm
                 view.setLayoutManager(new LinearLayoutManager(context));
                 mAdapter = new MyMovieRecyclerViewAdapter(movieList, this);
                 view.setAdapter(mAdapter);
-                view.addItemDecoration(new DividerItemDecoration(view.getContext(), DividerItemDecoration.VERTICAL_LIST));
+                view.addItemDecoration(new DividerItemDecoration(view.getContext(), LinearLayoutManager.VERTICAL));
             }
         }
 
