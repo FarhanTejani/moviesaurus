@@ -195,8 +195,7 @@ class Movie extends ParseObject {
     public float getRating() {
         float sum = 0;
         if (!ratingRestored) {
-            //restoreRatings();
-            throw new RuntimeException();
+            restoreRatings();
         }
         for (final Double d : rating.values()) {
             sum += d;
