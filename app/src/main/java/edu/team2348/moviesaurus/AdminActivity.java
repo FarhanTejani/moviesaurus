@@ -11,6 +11,7 @@ import android.widget.ListView;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -70,6 +71,9 @@ public class AdminActivity extends AppCompatActivity {
                 final boolean banned = temp.getBoolean("banned");
                 temp.put("banned", !banned);
                 temp.saveInBackground();
+                ParsePush push = new ParsePush();
+                push.setMessage(temp.getUsername() + " has been banned!");
+                push.sendInBackground();
             }
         });
     }
